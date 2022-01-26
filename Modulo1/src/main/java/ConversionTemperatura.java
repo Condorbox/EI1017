@@ -11,7 +11,6 @@ public class ConversionTemperatura {
         for (int i = 0; i<=100;i+=5){
             fahrenheit = (int)(i*(9f/5f)+32);
             reaumur = (int)(i*(4f/5f));
-            //System.out.println("|      " + i + "      |      " + fahrenheit + "      |      " + reaumur + "      |");
             format = String.format("|%8d     |%9d       |%8d     |", i, fahrenheit, reaumur);
             System.out.println(format);
         }
