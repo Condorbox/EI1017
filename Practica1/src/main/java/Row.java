@@ -1,8 +1,18 @@
 import java.util.List;
 
 public class Row implements RowInterface{
+    private String data;
+
+    public Row(String data){
+        this.data = data;
+    }
+
     @Override
-    public List<Double> getData() {
-        return null;
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data){
+        this.data = data;
     }
 }
