@@ -1,6 +1,6 @@
 import java.util.List;
 
 public interface TableInterface {
-    void getRowAt(int index);
-    List<String> getColumAt(int index);
+    Row getRowAt(int index);
+    List<Double> getColumAt(int index);
 }

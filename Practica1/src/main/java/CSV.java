@@ -3,11 +3,45 @@ import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class CSV implements CSVInterface{
-    private static String csvFile = "addresses.csv";
+    private static String csvFile = "C:\\Users\\manue\\IdeaProjects\\EI1017\\Practica1\\numbers.csv";
     private static String delimiter = ",";
     @Override
-    public void readTable(String table) {
+    public Table readTable(String csvFile) {
+        System.out.println("Reading....");
+        try{
+            Scanner myReader = new Scanner(new File(csvFile));
+            Table table = new Table();
+            boolean headersRead = false;
+            while (myReader.hasNextLine()){
+                String[] line = myReader.nextLine().split(delimiter);
+                if(!headersRead){ //Header
+                    for (String header : line){
+                        table.addHeader(header);
+                    }
+                    headersRead = true;
+                }else{
+                    Row newRow = new Row();
+                    for (String data : line){
+                        try {
+                            Double dataToAdd = Double.parseDouble(data);
+                            newRow.addData(dataToAdd);
+                        }catch (Exception exception){
+                            System.out.println("Wrong csv format, data can be only numbers");
+                            exception.printStackTrace();
+                            return null;
+                        }
+                    }
+                    table.addRow(newRow);
+                }
+            }
 
+            table.printTable(4,0);
+            return table;
+        }catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -15,7 +49,7 @@ public class CSV implements CSVInterface{
 
     }
 
-    public static void main(String[] args) {
+    /*private void readCSV(){
         try {
             Scanner myReader = new Scanner(new File(csvFile));
             Table table = new Table();
@@ -42,5 +76,5 @@ public class CSV implements CSVInterface{
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
+    }*/ //Last CSVReader
 }

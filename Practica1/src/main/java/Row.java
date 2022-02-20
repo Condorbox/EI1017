@@ -1,18 +1,28 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Row implements RowInterface{
-    private String data;
+    private List<Double> data;
 
-    public Row(String data){
+    public Row(){
+        data = new ArrayList<>();
+    }
+
+    public Row(List<Double> data){
         this.data = data;
     }
 
     @Override
-    public String getData() {
+    public List<Double> getData() {
         return data;
     }
 
-    public void setData(String data){
-        this.data = data;
+    public void addData(Double data){
+        this.data.add(data);
+    }
+
+    public void printRow(){
+        for (Double element : data)
+            System.out.print(element + " ");
     }
 }

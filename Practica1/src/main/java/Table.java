@@ -3,23 +3,28 @@ import java.util.List;
 
 public class Table implements TableInterface{
     private List<String> headers;
-    private List<ArrayList<Row>> matrix;
+    private List<Row> dataTable;
 
     public Table(){
         this.headers = new ArrayList<>();
-        this.matrix = new ArrayList<ArrayList<Row>>();
+        this.dataTable = new ArrayList<>();
     }
 
     @Override
-    public void getRowAt(int index) {
-
+    public Row getRowAt(int index) {
+        if(index >= dataTable.size() || index < 0)
+            throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (dataTable.size()-1) + "]");
+        return dataTable.get(index);
     }
 
     @Override
-    public List<String> getColumAt(int index) {
-        List<String> column = new ArrayList<>();
-        for (Row elemnt : matrix.get(index))
-            column.add(elemnt.getData());
+    public List<Double> getColumAt(int index) {
+        if (index >= headers.size() || index < 0)
+            throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (headers.size()-1) + "]");
+        List<Double> column = new ArrayList<>();
+        for (Row row : dataTable){
+            column.add(row.getData().get(index));
+        }
         return column;
     }
 
@@ -27,21 +32,19 @@ public class Table implements TableInterface{
         this.headers.add(header);
     }
 
-    public void addColum(){
-        matrix.add(new ArrayList<Row>());
+    public void addRow(Row element){
+        dataTable.add(element);
     }
 
-    public void addRow(int columnNumber, Row element){
-        matrix.get(columnNumber).add(element);
-    }
-
-    public void printTable(){
-        for(String header : headers)
-            System.out.print(header + ", ");
-        for (ArrayList<Row> column : matrix){
+    public void printTable(int rowIndex, int columnIndex){
+        for (String e : headers)
+            System.out.print(e + " ");
+        for (Row element : dataTable){
             System.out.println();
-            for(Row e : column)
-                System.out.print(e.getData() + ", ");
+            element.printRow();
         }
+
+        getRowAt(rowIndex);
+        getColumAt(columnIndex);
     }
 }
