@@ -3,8 +3,16 @@ import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class CSV implements CSVInterface{
-    private static String csvFile = "C:\\Users\\manue\\IdeaProjects\\EI1017\\Practica1\\numbers.csv";
-    private static String delimiter = ",";
+    private String delimiter = ",";
+
+    public CSV(){
+        this.delimiter = ",";
+    }
+
+    public CSV(String delimiter){
+        this.delimiter = delimiter;
+    }
+
     @Override
     public Table readTable(String csvFile) {
         System.out.println("Reading....");
@@ -34,8 +42,6 @@ public class CSV implements CSVInterface{
                     table.addRow(newRow);
                 }
             }
-
-            table.printTable(4,0);
             return table;
         }catch (IOException e) {
             System.out.println("An error occurred.");

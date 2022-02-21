@@ -17,12 +17,8 @@ public class Row implements RowInterface{
         return data;
     }
 
+    @Override
     public void addData(Double data){
         this.data.add(data);
-    }
-
-    public void printRow(){
-        for (Double element : data)
-            System.out.print(element + " ");
     }
 }

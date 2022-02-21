@@ -10,6 +10,11 @@ public class Table implements TableInterface{
         this.dataTable = new ArrayList<>();
     }
 
+    public Table(List<String> headers, List<Row> dataTable){
+        this.headers = headers;
+        this.dataTable = dataTable;
+    }
+
     @Override
     public Row getRowAt(int index) {
         if(index >= dataTable.size() || index < 0)
@@ -28,23 +33,23 @@ public class Table implements TableInterface{
         return column;
     }
 
+    @Override
     public void addHeader(String header){
         this.headers.add(header);
     }
 
-    public void addRow(Row element){
-        dataTable.add(element);
+    @Override
+    public void addRow(Row row){
+        dataTable.add(row);
     }
 
-    public void printTable(int rowIndex, int columnIndex){
-        for (String e : headers)
-            System.out.print(e + " ");
-        for (Row element : dataTable){
-            System.out.println();
-            element.printRow();
-        }
+    @Override
+    public List<String> getHeaders(){
+        return headers;
+    }
 
-        getRowAt(rowIndex);
-        getColumAt(columnIndex);
+    @Override
+    public List<Row> getDataTable(){
+        return dataTable;
     }
 }
