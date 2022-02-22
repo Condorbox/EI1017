@@ -1,3 +1,5 @@
+package CSV;
+
 import java.io.File;  // Import the File class
 import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
@@ -13,12 +15,11 @@ public class CSV implements CSVInterface{
         this.delimiter = delimiter;
     }
 
-    @Override
-    public Table readTable(String csvFile) {
+    public Table<Row> readTable(String csvFile) {
         System.out.println("Reading....");
         try{
             Scanner myReader = new Scanner(new File(csvFile));
-            Table table = new Table();
+            Table<Row> table = new Table();
             boolean headersRead = false;
             while (myReader.hasNextLine()){
                 String[] line = myReader.nextLine().split(delimiter);
@@ -50,15 +51,51 @@ public class CSV implements CSVInterface{
         }
     }
 
-    @Override
-    public void readTableWithLabels(String tableWithLabels) {
+    public TableWithLabel readTableWithLabels(String csvFileWithLabels) {
+        System.out.println("Reading....");
+        try{
+            Scanner myReader = new Scanner(new File(csvFileWithLabels));
+            TableWithLabel table = new TableWithLabel();
+            boolean headersRead = false;
+            while (myReader.hasNextLine()){
+                String[] line = myReader.nextLine().split(delimiter);
+                if(!headersRead){ //Header
+                    for (String header : line){
+                        table.addHeader(header);
+                    }
+                    headersRead = true;
+                }else{
+                    RowWithLabel newRow = new RowWithLabel();
+                    for (int i = 0; i<line.length; i++){
+                        if (i == table.getHeaders().size() - 1){
+                            newRow.setLabel(line[i]);
+                        }else{
+                            try {
+                                Double dataToAdd = Double.parseDouble(line[i]);
+                                newRow.addData(dataToAdd);
+                            }catch (Exception exception){
+                                System.out.println("Wrong csv format, data can be only numbers except for the label");
+                                exception.printStackTrace();
+                                return null;
+                            }
+                        }
+                    }
+                    table.addRow(newRow);
+                }
+            }
+            return table;
+        }catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
     /*private void readCSV(){
         try {
             Scanner myReader = new Scanner(new File(csvFile));
-            Table table = new Table();
+            CSV.Table table = new CSV.Table();
             int column = -1;
             while (myReader.hasNextLine()) {
                 String[] line = myReader.nextLine().split(delimiter);
@@ -69,7 +106,7 @@ public class CSV implements CSVInterface{
                     if(column == -1){ //Headers
                         table.addHeader(newElemnt);
                     }else{
-                        Row rowToAdd = new Row(newElemnt);
+                        CSV.Row rowToAdd = new CSV.Row(newElemnt);
                         table.addRow(column,rowToAdd);
                     }
                 }

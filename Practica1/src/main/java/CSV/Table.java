@@ -1,55 +1,51 @@
+package CSV;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table implements TableInterface{
-    private List<String> headers;
-    private List<Row> dataTable;
+public class Table<T extends Row> implements TableInterface{
+    protected List<String> headers;
+    protected List<T> dataTable;
 
     public Table(){
         this.headers = new ArrayList<>();
         this.dataTable = new ArrayList<>();
     }
 
-    public Table(List<String> headers, List<Row> dataTable){
+    public Table(List<String> headers, List<T> dataTable){
         this.headers = headers;
         this.dataTable = dataTable;
     }
 
-    @Override
-    public Row getRowAt(int index) {
+    public T getRowAt(int index) {
         if(index >= dataTable.size() || index < 0)
             throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (dataTable.size()-1) + "]");
         return dataTable.get(index);
     }
 
-    @Override
     public List<Double> getColumAt(int index) {
         if (index >= headers.size() || index < 0)
             throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (headers.size()-1) + "]");
         List<Double> column = new ArrayList<>();
-        for (Row row : dataTable){
+        for (T row : dataTable){
             column.add(row.getData().get(index));
         }
         return column;
     }
 
-    @Override
     public void addHeader(String header){
         this.headers.add(header);
     }
 
-    @Override
-    public void addRow(Row row){
+    public void addRow(T row){
         dataTable.add(row);
     }
 
-    @Override
     public List<String> getHeaders(){
         return headers;
     }
 
-    @Override
-    public List<Row> getDataTable(){
+    public List<T> getDataTable(){
         return dataTable;
     }
 }
