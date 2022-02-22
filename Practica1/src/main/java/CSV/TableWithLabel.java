@@ -1,6 +1,5 @@
 package CSV;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class TableWithLabel extends Table<RowWithLabel> implements TableWithLabe
     }
 
     @Override
-    public List<Double> getColumAt(int index) {
+    public List<Double> getColumnAt(int index) {
         if (index > headers.size() || index < 0)
             throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (headers.size()-2) + "], label column with getLabelColumn()");
         List<Double> column = new ArrayList<>();

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class CSV implements CSVInterface{
-    private String delimiter = ",";
+    private String delimiter;
 
     public CSV(){
         this.delimiter = ",";
@@ -19,7 +19,7 @@ public class CSV implements CSVInterface{
         System.out.println("Reading....");
         try{
             Scanner myReader = new Scanner(new File(csvFile));
-            Table<Row> table = new Table();
+            Table<Row> table = new Table<Row>();
             boolean headersRead = false;
             while (myReader.hasNextLine()){
                 String[] line = myReader.nextLine().split(delimiter);
@@ -67,7 +67,7 @@ public class CSV implements CSVInterface{
                 }else{
                     RowWithLabel newRow = new RowWithLabel();
                     for (int i = 0; i<line.length; i++){
-                        if (i == table.getHeaders().size() - 1){
+                        if (i == table.getHeaders().size() - 1){ //Label
                             newRow.setLabel(line[i]);
                         }else{
                             try {
@@ -91,33 +91,4 @@ public class CSV implements CSVInterface{
         }
 
     }
-
-    /*private void readCSV(){
-        try {
-            Scanner myReader = new Scanner(new File(csvFile));
-            CSV.Table table = new CSV.Table();
-            int column = -1;
-            while (myReader.hasNextLine()) {
-                String[] line = myReader.nextLine().split(delimiter);
-                if(column != -1){ //not header
-                    table.addColum();
-                }
-                for(String newElemnt: line){ //newElemnt?
-                    if(column == -1){ //Headers
-                        table.addHeader(newElemnt);
-                    }else{
-                        CSV.Row rowToAdd = new CSV.Row(newElemnt);
-                        table.addRow(column,rowToAdd);
-                    }
-                }
-                column++;
-            }
-            myReader.close();
-
-            table.printTable();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }*/ //Last CSVReader
 }

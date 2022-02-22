@@ -37,7 +37,7 @@ class CSVTest {
     @DisplayName("Test getColumn incorrect index")
     void testGetColumnIncorrectIndex(){
         Table table = csv.readTable("CSVFiles/numbers.csv");
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumAt(-1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumnAt(-1));
     }
 
     @Test
@@ -45,7 +45,7 @@ class CSVTest {
     void testGetColumn(){
         Table table = csv.readTable("CSVFiles/numbers.csv");
         List<Double> column = Arrays.asList(0., 1., 2., 3.);
-        assertArrayEquals(column.toArray(), table.getColumAt(0).toArray());
+        assertArrayEquals(column.toArray(), table.getColumnAt(0).toArray());
     }
 
     @Test
@@ -124,7 +124,7 @@ class CSVTest {
     @DisplayName("Test getColumn with label incorrect index")
     void testGetColumnWithLabelIncorrectIndex(){
         TableWithLabel table = csv.readTableWithLabels("CSVFiles/numbersWithLabels.csv");
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumAt(-1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumnAt(-1));
     }
 
     @Test
@@ -132,7 +132,7 @@ class CSVTest {
     void testGetColumnWithLabel(){
         TableWithLabel table = csv.readTableWithLabels("CSVFiles/numbersWithLabels.csv");
         List<Double> column = Arrays.asList(0., 1., 2., 3.);
-        assertArrayEquals(column.toArray(), table.getColumAt(0).toArray());
+        assertArrayEquals(column.toArray(), table.getColumnAt(0).toArray());
     }
 
     @Test
@@ -238,7 +238,7 @@ class CSVTest {
     private boolean compareRows(Table expected, Table actual){
         if (expected.getHeaders().size() != actual.getHeaders().size()) { return false; }
         for (int i = 0; i<expected.getHeaders().size();i++){
-            if(!expected.getColumAt(i).equals(actual.getColumAt(i))){
+            if(!expected.getColumnAt(i).equals(actual.getColumnAt(i))){
                 return false;
             }
         }
@@ -249,7 +249,7 @@ class CSVTest {
         if (expected.getHeaders().size() != actual.getHeaders().size()) { return false; }
 
         for (int i = 0; i<expected.getHeaders().size() -1;i++){
-            if(!expected.getColumAt(i).equals(actual.getColumAt(i))){
+            if(!expected.getColumnAt(i).equals(actual.getColumnAt(i))){
                 return false;
             }
         }
