@@ -1,10 +1,14 @@
 package CSV;
 
 import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class CSV implements CSVInterface{
+    private static final Table<Row> TABLE_ERROR = new Table<Row>();
+    private static final TableWithLabel TABLE_WITH_LABEL_ERROR = new TableWithLabel();
+
     private String delimiter;
 
     public CSV(){
@@ -17,37 +21,41 @@ public class CSV implements CSVInterface{
 
     public Table<Row> readTable(String csvFile) {
         System.out.println("Reading....");
-        try{
+        try {
             Scanner myReader = new Scanner(new File(csvFile));
             Table<Row> table = new Table<Row>();
             boolean headersRead = false;
-            while (myReader.hasNextLine()){
+            while (myReader.hasNextLine()) {
                 String[] line = myReader.nextLine().split(delimiter);
-                if(!headersRead){ //Header
-                    for (String header : line){
+                if (!headersRead) { //Header
+                    for (String header : line) {
                         table.addHeader(header);
                     }
                     headersRead = true;
-                }else{
+                } else {
                     Row newRow = new Row();
-                    for (String data : line){
+                    for (String data : line) {
                         try {
                             Double dataToAdd = Double.parseDouble(data);
                             newRow.addData(dataToAdd);
-                        }catch (Exception exception){
+                        } catch (Exception exception) {
                             System.out.println("Wrong csv format, data can be only numbers");
                             exception.printStackTrace();
-                            return null;
+                            return TABLE_ERROR;
                         }
                     }
                     table.addRow(newRow);
                 }
             }
             return table;
-        }catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+            return TABLE_ERROR;
+        } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-            return null;
+            return TABLE_ERROR;
         }
     }
 
@@ -76,7 +84,7 @@ public class CSV implements CSVInterface{
                             }catch (Exception exception){
                                 System.out.println("Wrong csv format, data can be only numbers except for the label");
                                 exception.printStackTrace();
-                                return null;
+                                return TABLE_WITH_LABEL_ERROR;
                             }
                         }
                     }
@@ -84,10 +92,14 @@ public class CSV implements CSVInterface{
                 }
             }
             return table;
+        }catch (FileNotFoundException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+            return TABLE_WITH_LABEL_ERROR;
         }catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-            return null;
+            return TABLE_WITH_LABEL_ERROR;
         }
 
     }

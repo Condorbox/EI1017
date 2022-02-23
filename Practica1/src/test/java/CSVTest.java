@@ -12,10 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CSVTest {
     private static CSV csv;
+    private static Table<Row> emptyTable;
+    private static TableWithLabel emptyTableWithLabel;
 
     @BeforeAll
     static void initAll(){
         csv = new CSV(",");
+        emptyTable = new Table<Row>();
+        emptyTableWithLabel = new TableWithLabel();
     }
 
     ///CSV without labels
@@ -23,14 +27,20 @@ class CSVTest {
     @DisplayName("Read file doesn't exit")
     void testReadFileDoesNotExit() {
         Table table = csv.readTable("File.csv");
-        assertEquals(table, null);
+        assertAll("Test read null file",
+                () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
+                () -> assertTrue(compareRows(emptyTable, table))
+        );
     }
 
     @Test
     @DisplayName("File wrong format")
     void testReadFileWrongFormat() {
-        Table table = csv.readTable("CSVFiles/crash_catalonia.csv");
-        assertEquals(table, null);
+        Table table = csv.readTable("File.csv");
+        assertAll("Test read null file",
+                () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
+                () -> assertTrue(compareRows(emptyTable, table))
+        );
     }
 
     @Test
@@ -66,14 +76,10 @@ class CSVTest {
     @Test
     @DisplayName("Read null File")
     void testReadNullFile(){
-        Table dataTable = csv.readTable("CSVFiles/EmptyFile.csv");
-        List<String> headers = new ArrayList<>();
-        List<Row> data = new ArrayList<>();
-        Table tableCorrect = new Table(headers, data);
-
+        Table table = csv.readTable("File.csv");
         assertAll("Test read null file",
-                () -> assertArrayEquals(tableCorrect.getHeaders().toArray(), dataTable.getHeaders().toArray()),
-                () -> assertTrue(compareRows(tableCorrect, dataTable))
+                () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
+                () -> assertTrue(compareRows(emptyTable, table))
         );
     }
 
@@ -83,7 +89,7 @@ class CSVTest {
         Table dataTable = csv.readTable("CSVFiles/FileWithOnlyHeaders.csv");
         List<String> headers = Arrays.asList("lenth", "class");
         List<Row> data = new ArrayList<>();
-        Table tableCorrect = new Table(headers, data);
+        Table tableCorrect = new Table<Row>(headers, data);
 
         assertAll("Test read only headers file",
                 () -> assertArrayEquals(tableCorrect.getHeaders().toArray(), dataTable.getHeaders().toArray()),
@@ -97,7 +103,7 @@ class CSVTest {
         Table dataTable = csv.readTable("CSVFiles/numbers.csv");
         List<String> headers = Arrays.asList("code", "number");
         List<Row> data = createRows();
-        Table tableCorrect = new Table(headers, data);
+        Table tableCorrect = new Table<Row>(headers, data);
 
         assertAll("Test read file",
                 () -> assertArrayEquals(tableCorrect.getHeaders().toArray(), dataTable.getHeaders().toArray()),
@@ -110,14 +116,20 @@ class CSVTest {
     @DisplayName("Read file with label doesn't exit")
     void testReadFileWithLabelDoesNotExit() {
         TableWithLabel table = csv.readTableWithLabels("File.csv");
-        assertEquals(table, null);
+        assertAll("Test read null file",
+                () -> assertArrayEquals(emptyTableWithLabel.getHeaders().toArray(), table.getHeaders().toArray()),
+                () -> assertTrue(compareRowsWithLabels(emptyTableWithLabel, table))
+        );
     }
 
     @Test
     @DisplayName("File wrong format")
     void testReadFileWithLabelWrongFormat() {
-        TableWithLabel table = csv.readTableWithLabels("CSVFiles/crash_catalonia.csv");
-        assertEquals(table, null);
+        TableWithLabel table = csv.readTableWithLabels("File.csv");
+        assertAll("Test read null file",
+                () -> assertArrayEquals(emptyTableWithLabel.getHeaders().toArray(), table.getHeaders().toArray()),
+                () -> assertTrue(compareRowsWithLabels(emptyTableWithLabel, table))
+        );
     }
 
     @Test
@@ -218,22 +230,6 @@ class CSVTest {
         }
         return data;
     }
-
-    /*private boolean compareRows(List<Row> actual, List<Row> expected){
-        if (actual.size() != expected.size()) { return false; }
-        for (int i = 0; i<actual.size(); i++){
-            List<Double> actualData = actual.get(i).getData();
-            List<Double> expectedData = expected.get(i).getData();
-
-            for (int j = 0; j<actualData.size(); j++){
-                if (!actualData.get(j).equals(expectedData.get(j))){
-                    System.out.println("actual[" +i+"]: " + actualData.get(j) + "\nexpected["+i+"]: " + expectedData.get(j));
-                    return false;
-                }
-            }
-        }
-        return true;
-    }*/
 
     private boolean compareRows(Table expected, Table actual){
         if (expected.getHeaders().size() != actual.getHeaders().size()) { return false; }
