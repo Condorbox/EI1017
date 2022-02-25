@@ -31,8 +31,7 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
     }
 
     public Double estimate(Double sample) {
-        Double estimate = origin + slope*sample.doubleValue();
-        return estimate;
+        return origin + slope*sample;
     }
 
     public Double getSlope() {
