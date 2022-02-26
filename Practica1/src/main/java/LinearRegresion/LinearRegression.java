@@ -31,7 +31,7 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
         double correlationCoefficient = Arithmetic.Covariance(xData,yData)/(standardDeviationX*standardDeviationY);
         slope = correlationCoefficient*(standardDeviationY/standardDeviationX);
         origin = Arithmetic.mean(yData) - slope*Arithmetic.mean(xData);
-        error = Math.sqrt(Arithmetic.variance(yData))/(yData.length - 2);
+        error = Math.sqrt((Arithmetic.variance(yData)*yData.length))/(yData.length - 2);
     }
 
     public Double[] estimate(Double sample) {
