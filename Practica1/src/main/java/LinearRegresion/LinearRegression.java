@@ -7,14 +7,17 @@ import org.apache.commons.lang3.ArrayUtils;
 public class LinearRegression implements LinearRegressionInterface<Table<Row>, Double> {
     private double slope;
     private double origin;
+    private double error;
 
     public LinearRegression(){
         this.slope = 0;
         this.origin = 0;
+        this.error = 0;
     }
-    public LinearRegression(double slope, double origin){
+    public LinearRegression(double slope, double origin, double error){
         this.slope = slope;
         this.origin = origin;
+        this.error = error;
     }
 
     public void train(Table<Row> data) {
@@ -28,10 +31,12 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
         double correlationCoefficient = Arithmetic.Covariance(xData,yData)/(standardDeviationX*standardDeviationY);
         slope = correlationCoefficient*(standardDeviationY/standardDeviationX);
         origin = Arithmetic.mean(yData) - slope*Arithmetic.mean(xData);
+        error = Math.sqrt(Arithmetic.variance(yData))/(yData.length - 2);
     }
 
-    public Double estimate(Double sample) {
-        return origin + slope*sample;
+    public Double[] estimate(Double sample) {
+        Double estimate = origin + slope*sample;
+        return new Double[]{estimate - error, estimate + error};
     }
 
     public Double getSlope() {
@@ -40,5 +45,10 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
 
     public Double getOrigin() {
         return origin;
+    }
+
+    @Override
+    public Double getError() {
+        return error;
     }
 }

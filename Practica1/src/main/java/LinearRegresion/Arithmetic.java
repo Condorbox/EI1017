@@ -10,12 +10,16 @@ public class Arithmetic {
         return sum / data.length;
     }
 
-    public static double standardDeviation(double[] data){
+    public static double variance(double[] data){
         double sum = 0;
         double mean = mean(data);
         for (Double e: data)
             sum += Math.pow((e - mean), 2);
-        return Math.sqrt(sum/data.length);
+        return sum/data.length;
+    }
+
+    public static double standardDeviation(double[] data){
+       return Math.sqrt(variance(data));
     }
 
     public static double Covariance(double[] xData, double[] yData){
@@ -28,5 +32,4 @@ public class Arithmetic {
         }
         return sum / xData.length;
     }
-
 }

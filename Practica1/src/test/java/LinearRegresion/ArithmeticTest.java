@@ -44,6 +44,37 @@ class ArithmeticTest {
         assertEquals(3, Arithmetic.mean(data));
     }
 
+    //Variance
+    @Test
+    @DisplayName("Test Variance null data")
+    void testNullVariance(){
+        assertThrows(NullPointerException.class, () -> Arithmetic.variance(dataNull));
+    }
+
+    @Test
+    @DisplayName("Test variance empty data")
+    void testEmptyVariance(){
+        assertThrows(NullPointerException.class, () -> Arithmetic.variance(dataNull));
+    }
+
+    @Test
+    @DisplayName("Test variance one element")
+    void testOneElementVariance(){
+        assertEquals(0,Arithmetic.variance(dataOneElement));
+    }
+
+    @Test
+    @DisplayName("Test variance same elements")
+    void testSameElementsVariance(){
+        assertEquals(0, Arithmetic.variance(dataSameElements));
+    }
+
+    @Test
+    @DisplayName("Test Standard Deviation")
+    void testVariance(){
+        assertEquals(2, Arithmetic.variance(data));
+    }
+
     //Standard Deviation
     @Test
     @DisplayName("Test Standard Deviation null data")
