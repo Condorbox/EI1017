@@ -34,8 +34,12 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
         error = Math.sqrt((Arithmetic.variance(yData)*yData.length))/(yData.length - 2);
     }
 
-    public Double[] estimate(Double sample) {
-        Double estimate = origin + slope*sample;
+    public Double estimate(Double sample) {
+        return origin + slope*sample;
+    }
+
+    public Double[] estimateWithError(Double sample) {
+        Double estimate = estimate(sample);
         return new Double[]{estimate - error, estimate + error};
     }
 

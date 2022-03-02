@@ -41,57 +41,61 @@ class LinearRegressionTest {
         );
     }
 
-    @Test
-    @DisplayName("Test numbers train")
-    void testNumbersTrain(){
-        linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
-        assertAll(
-                () -> assertEquals(1.9999999999999996, linearRegression.getSlope()),
-                () -> assertEquals(8.881784197001252E-16, linearRegression.getOrigin()),
-                () -> assertEquals(2.23606797749979, linearRegression.getError())
-        );
-    }
-
     ///Estimate
     @Test
-    @DisplayName("Estimate 1 miles_dollars")
-    void estimateOneMilesDollars(){
+    @DisplayName("Estimate 10 miles_dollars")
+    void estimateTenMilesDollars(){
         linearRegression.train(CSVReader.readTable("CSVFiles/miles_dollars.csv"));
-        assertArrayEquals(new Double[]{-80.29993110180476, 630.7040343874173}, linearRegression.estimate(1.));
+        assertEquals(286.502613676227, linearRegression.estimate(10.));
     }
 
     @Test
-    @DisplayName("Estimate 5 miles_dollars")
-    void estimateFiveMilesDollars(){
+    @DisplayName("Estimate 2 numbers")
+    void estimateTwoNumbers(){
+        linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
+        assertEquals(4.0, linearRegression.estimate(2.));
+    }
+
+    ///Estimate With Error
+    @Test
+    @DisplayName("Estimate with error 1 miles_dollars")
+    void estimateWithErrorOneMilesDollars(){
         linearRegression.train(CSVReader.readTable("CSVFiles/miles_dollars.csv"));
-        assertArrayEquals(new Double[]{-75.27745908695113, 635.726506402271}, linearRegression.estimate(5.));
+        assertArrayEquals(new Double[]{-80.29993110180476, 630.7040343874173}, linearRegression.estimateWithError(1.));
     }
 
     @Test
-    @DisplayName("Estimate 23 miles_dollars")
-    void estimateTwentyThreeMilesDollars(){
+    @DisplayName("Estimate with error 5 miles_dollars")
+    void estimateWithErrorFiveMilesDollars(){
         linearRegression.train(CSVReader.readTable("CSVFiles/miles_dollars.csv"));
-        assertArrayEquals(new Double[]{-52.67633502010983, 658.3276304691123}, linearRegression.estimate(23.));
+        assertArrayEquals(new Double[]{-75.27745908695113, 635.726506402271}, linearRegression.estimateWithError(5.));
     }
 
     @Test
-    @DisplayName("Estimate 0.15 numbers")
-    void estimateDotFiveTeenNumbers(){
-        linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
-        assertArrayEquals(new Double[]{-1.936067977499789, 2.5360679774997905}, linearRegression.estimate(.15));
+    @DisplayName("Estimate with error 23 miles_dollars")
+    void estimateWithErrorTwentyThreeMilesDollars(){
+        linearRegression.train(CSVReader.readTable("CSVFiles/miles_dollars.csv"));
+        assertArrayEquals(new Double[]{-52.67633502010983, 658.3276304691123}, linearRegression.estimateWithError(23.));
     }
 
     @Test
-    @DisplayName("Estimate 7 numbers")
-    void estimateSevenNumbers(){
+    @DisplayName("Estimate with error 0.15 numbers")
+    void estimateWithErrorDotFiveTeenNumbers(){
         linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
-        assertArrayEquals(new Double[]{11.763932022500207, 16.236067977499786}, linearRegression.estimate(7.));
+        assertArrayEquals(new Double[]{-1.936067977499789, 2.5360679774997905}, linearRegression.estimateWithError(.15));
     }
 
     @Test
-    @DisplayName("Estimate 11 numbers")
-    void estimateElevenNumbers(){
+    @DisplayName("Estimate with error 7 numbers")
+    void estimateWithErrorSevenNumbers(){
         linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
-        assertArrayEquals(new Double[]{19.763932022500207, 24.236067977499786}, linearRegression.estimate(11.));
+        assertArrayEquals(new Double[]{11.763932022500207, 16.236067977499786}, linearRegression.estimateWithError(7.));
+    }
+
+    @Test
+    @DisplayName("Estimate with error 11 numbers")
+    void estimateWithErrorElevenNumbers(){
+        linearRegression.train(CSVReader.readTable("CSVFiles/numbers.csv"));
+        assertArrayEquals(new Double[]{19.763932022500207, 24.236067977499786}, linearRegression.estimateWithError(11.));
     }
 }
