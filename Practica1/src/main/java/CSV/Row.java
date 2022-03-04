@@ -14,10 +14,12 @@ public class Row implements RowInterface{
         this.data = data;
     }
 
+    @Override
     public List<Double> getData() {
         return data;
     }
 
+    @Override
     public void addData(Double data){
         this.data.add(data);
     }

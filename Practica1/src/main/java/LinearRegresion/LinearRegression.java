@@ -2,6 +2,7 @@ package LinearRegresion;
 
 import CSV.Row;
 import CSV.Table;
+import Utilities.Arithmetic;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class LinearRegression implements LinearRegressionInterface<Table<Row>, Double> {
@@ -20,6 +21,7 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
         this.error = error;
     }
 
+    @Override
     public void train(Table<Row> data) {
         if (data.getHeaders().size() != 2) throw new IllegalArgumentException("Tabla must have just 2 columns");
         double[] xData = ArrayUtils.toPrimitive(data.getColumnAt(0).stream().toArray(Double[]::new));
@@ -30,23 +32,27 @@ public class LinearRegression implements LinearRegressionInterface<Table<Row>, D
 
         double correlationCoefficient = Arithmetic.Covariance(xData,yData)/(standardDeviationX*standardDeviationY);
         slope = correlationCoefficient*(standardDeviationY/standardDeviationX);
-        origin = Arithmetic.mean(yData) - slope*Arithmetic.mean(xData);
+        origin = Arithmetic.mean(yData) - slope* Arithmetic.mean(xData);
         error = Math.sqrt((Arithmetic.variance(yData)*yData.length))/(yData.length - 2);
     }
 
+    @Override
     public Double estimate(Double sample) {
         return origin + slope*sample;
     }
 
+    @Override
     public Double[] estimateWithError(Double sample) {
         Double estimate = estimate(sample);
         return new Double[]{estimate - error, estimate + error};
     }
 
+    @Override
     public Double getSlope() {
         return slope;
     }
 
+    @Override
     public Double getOrigin() {
         return origin;
     }

@@ -1,6 +1,8 @@
-package LinearRegresion;
+package Utilities;
 
-public class Arithmetic {
+public final class Arithmetic {
+    private Arithmetic(){}
+
     public static double mean(double[] data){
         if (data == null) throw new NullPointerException("Null data is forbidden");
         if (data.length <= 0) throw new ArithmeticException("Data must have at least one element");
@@ -31,5 +33,17 @@ public class Arithmetic {
             sum += Math.abs(xData[i]-xMean)*Math.abs(yData[i]-yMean);
         }
         return sum / xData.length;
+    }
+
+    public static double euclideanDistance(double[] from, double[] to){
+        if (from == null || to == null) throw new NullPointerException("data can't be nulls");
+        if (from.length != to.length) throw new IllegalArgumentException("Vectors must have the same size");
+        double distance = 0;
+
+        for (int i=0;i<from.length;i++){
+            distance += Math.pow(from[i]-to[i],2);
+        }
+
+        return Math.sqrt(distance);
     }
 }

@@ -19,6 +19,7 @@ public class CSV implements CSVInterface{
         this.delimiter = delimiter;
     }
 
+    @Override
     public Table<Row> readTable(String csvFile) {
         System.out.println("Reading....");
         try {
@@ -59,6 +60,7 @@ public class CSV implements CSVInterface{
         }
     }
 
+    @Override
     public TableWithLabel readTableWithLabels(String csvFileWithLabels) {
         System.out.println("Reading....");
         try{

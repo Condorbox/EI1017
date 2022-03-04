@@ -24,6 +24,7 @@ public class TableWithLabel extends Table<RowWithLabel> implements TableWithLabe
         return column;
     }
 
+    @Override
     public List<String> getLabelColumn(){
         List<String> labelColumn = new ArrayList<>();
         for (RowWithLabel row : dataTable){
