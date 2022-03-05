@@ -2,14 +2,13 @@ package CSV;
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class CSV implements CSVInterface{
     private static final Table<Row> TABLE_ERROR = new Table<Row>();
     private static final TableWithLabel TABLE_WITH_LABEL_ERROR = new TableWithLabel();
 
-    private String delimiter;
+    private final String delimiter;
 
     public CSV(){
         this.delimiter = ",";
@@ -53,10 +52,6 @@ public class CSV implements CSVInterface{
             System.out.println("File not found");
             e.printStackTrace();
             return TABLE_ERROR;
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-            return TABLE_ERROR;
         }
     }
 
@@ -98,11 +93,6 @@ public class CSV implements CSVInterface{
             System.out.println("File not found");
             e.printStackTrace();
             return TABLE_WITH_LABEL_ERROR;
-        }catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-            return TABLE_WITH_LABEL_ERROR;
         }
-
     }
 }

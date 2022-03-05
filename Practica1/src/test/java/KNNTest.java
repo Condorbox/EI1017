@@ -1,25 +1,21 @@
 import CSV.CSV;
 import KNN.KNN;
+import Utilities.GetAbsolutePath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KNNTest {
-    KNNTest() throws URISyntaxException {
-    }
-
     private static CSV CSVReader;
     private static KNN knn;
 
-    private final String numbersWithLabels = Paths.get(getClass().getResource("CSVFiles/numbersWithLabels.csv").toURI()).toFile().getAbsolutePath();
-    private final String iris = Paths.get(getClass().getResource("CSVFiles/iris.csv").toURI()).toFile().getAbsolutePath();
+    private final String numbersWithLabels = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/numbersWithLabels.csv");
+    private final String iris =GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/iris.csv");
 
     @BeforeAll
     static void initAll(){

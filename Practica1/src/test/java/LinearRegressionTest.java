@@ -1,24 +1,20 @@
 import CSV.CSV;
 import LinearRegresion.LinearRegression;
+import Utilities.GetAbsolutePath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class LinearRegressionTest {
-    LinearRegressionTest() throws URISyntaxException {
-    }
     private static CSV CSVReader;
     private static LinearRegression linearRegression;
 
-    private final String emptyFile = Paths.get(getClass().getResource("CSVFiles/EmptyFile.csv").toURI()).toFile().getAbsolutePath();
-    private final String numbers = Paths.get(getClass().getResource("CSVFiles/numbers.csv").toURI()).toFile().getAbsolutePath();
-    private final String threeFile = Paths.get(getClass().getResource("CSVFiles/ThreeFile.csv").toURI()).toFile().getAbsolutePath();
-    private final String milesDollars = Paths.get(getClass().getResource("CSVFiles/miles_dollars.csv").toURI()).toFile().getAbsolutePath();
+    private final String emptyFile = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/EmptyFile.csv");
+    private final String numbers = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/numbers.csv");
+    private final String threeFile = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/ThreeFile.csv");
+    private final String milesDollars = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/miles_dollars.csv");
 
     @BeforeAll
     static void initAll(){

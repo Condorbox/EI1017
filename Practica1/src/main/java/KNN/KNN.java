@@ -9,7 +9,7 @@ import java.util.*;
 
 public class KNN implements KNNInterface{
     private final int k; //k nearest neighbors
-    private Map<List<Double>,String> dataTable;
+    private final Map<List<Double>,String> dataTable;
     public KNN(){
         this.k = 5;
         this.dataTable = new HashMap<>();
@@ -39,12 +39,12 @@ public class KNN implements KNNInterface{
 
     private String mostCommon(DistanceData[] neighbours){
         Map<String, Integer> repetitions = new HashMap<>();
-        for (int i = 0; i<neighbours.length; i++){
-            if (!repetitions.containsKey(neighbours[i].getType())){
-                repetitions.put(neighbours[i].getType(), 1);
+        for (DistanceData neighbour: neighbours) {
+            if (!repetitions.containsKey(neighbour.getType())){
+                repetitions.put(neighbour.getType(), 1);
             }else{
-                int numberOfRepetitions = repetitions.get(neighbours[i].getType());
-                repetitions.put(neighbours[i].getType(), numberOfRepetitions + 1);
+                int numberOfRepetitions = repetitions.get(neighbour.getType());
+                repetitions.put(neighbour.getType(), numberOfRepetitions + 1);
             }
         }
         List<Map.Entry<String, Integer>> sortedMap = new LinkedList<>(repetitions.entrySet());

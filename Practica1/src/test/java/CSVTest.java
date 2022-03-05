@@ -1,11 +1,10 @@
 import CSV.*;
 
+import Utilities.GetAbsolutePath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,27 +12,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CSVTest {
-    CSVTest() throws URISyntaxException {
-    }
-
     private static CSV csv;
     private static Table<Row> emptyTable;
     private static TableWithLabel emptyTableWithLabel;
 
-    /*private final String crashCatalonia = "src/main/resources/CSVFiles/crash_catalonia.csv";
-    //private final String emptyFile = "src/main/resources/CSVFiles/EmptyFile.csv";
-    //private final String fileOnlyHeaderAndLabel = "src/main/resources/CSVFiles/FileOnlyHeaderAndLabel.csv";
-    //private final String fileWithOnlyHeaders = "src/main/resources/CSVFiles/FileWithOnlyHeaders.csv";
-    //private final String numbers = "src/main/resources/CSVFiles/numbers.csv";
-    private final String numbersWithLabels = "src/main/resources/CSVFiles/numbersWithLabels.csv";*/
-
-    private final String crashCatalonia = Paths.get(getClass().getResource("CSVFiles/crash_catalonia.csv").toURI()).toFile().getAbsolutePath();
-    private final String emptyFile = Paths.get(getClass().getResource("CSVFiles/EmptyFile.csv").toURI()).toFile().getAbsolutePath();
-    private final String fileOnlyHeaderAndLabel = Paths.get(getClass().getResource("CSVFiles/FileOnlyHeaderAndLabel.csv").toURI()).toFile().getAbsolutePath();
-    private final String fileWithOnlyHeaders = Paths.get(getClass().getResource("CSVFiles/FileWithOnlyHeaders.csv").toURI()).toFile().getAbsolutePath();
-    private String numbers = Paths.get(getClass().getResource("CSVFiles/numbers.csv").toURI()).toFile().getAbsolutePath();
-    private final String numbersWithLabels = Paths.get(getClass().getResource("CSVFiles/numbersWithLabels.csv").toURI()).toFile().getAbsolutePath();
-
+    private final String crashCatalonia = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/crash_catalonia.csv");
+    private final String emptyFile = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/EmptyFile.csv");
+    private final String fileWithOnlyHeaders = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/FileWithOnlyHeaders.csv");
+    private final String fileOnlyHeaderAndLabel = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/FileOnlyHeaderAndLabel.csv");
+    private final String numbers = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/numbers.csv");
+    private final String numbersWithLabels = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/numbersWithLabels.csv");
 
     @BeforeAll
     static void initAll(){
@@ -56,7 +44,7 @@ class CSVTest {
     @Test
     @DisplayName("File wrong format")
     void testReadFileWrongFormat() {
-        Table table = csv.readTable(crashCatalonia);
+        Table<Row> table = csv.readTable(crashCatalonia);
         assertAll("Test wrong format file",
                 () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
                 () -> assertTrue(compareRows(emptyTable, table))
@@ -66,14 +54,14 @@ class CSVTest {
     @Test
     @DisplayName("Test getColumn incorrect index")
     void testGetColumnIncorrectIndex(){
-        Table table = csv.readTable(numbers);
+        Table<Row> table = csv.readTable(numbers);
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumnAt(-1));
     }
 
     @Test
     @DisplayName("Test getColumn")
     void testGetColumn(){
-        Table table = csv.readTable(numbers);
+        Table<Row> table = csv.readTable(numbers);
         List<Double> column = Arrays.asList(0., 1., 2., 3.);
         assertArrayEquals(column.toArray(), table.getColumnAt(0).toArray());
     }
@@ -81,14 +69,14 @@ class CSVTest {
     @Test
     @DisplayName("Test getRow incorrect index")
     void testGetRowIncorrectIndex(){
-        Table table = csv.readTable(numbers);
+        Table<Row> table = csv.readTable(numbers);
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getRowAt(-1));
     }
 
     @Test
     @DisplayName("Test getRow")
     void testGetRow(){
-        Table table = csv.readTable(numbers);
+        Table<Row> table = csv.readTable(numbers);
         Row row = new Row(Arrays.asList(1.,2.));
         assertEquals(row.getData(), table.getRowAt(1).getData());
     }
@@ -96,10 +84,10 @@ class CSVTest {
     @Test
     @DisplayName("Read only headers file")
     void testReadOnlyHeadersFile(){
-        Table dataTable = csv.readTable(fileWithOnlyHeaders);
+        Table<Row> dataTable = csv.readTable(fileWithOnlyHeaders);
         List<String> headers = Arrays.asList("lenth", "class");
         List<Row> data = new ArrayList<>();
-        Table tableCorrect = new Table<Row>(headers, data);
+        Table<Row> tableCorrect = new Table<Row>(headers, data);
 
         assertAll("Test read only headers file",
                 () -> assertArrayEquals(tableCorrect.getHeaders().toArray(), dataTable.getHeaders().toArray()),
@@ -110,10 +98,10 @@ class CSVTest {
     @Test
     @DisplayName("Read file")
     void testReadFile(){
-        Table dataTable = csv.readTable(numbers);
+        Table<Row> dataTable = csv.readTable(numbers);
         List<String> headers = Arrays.asList("code", "number");
         List<Row> data = createRows();
-        Table tableCorrect = new Table<Row>(headers, data);
+        Table<Row> tableCorrect = new Table<Row>(headers, data);
 
         assertAll("Test read file",
                 () -> assertArrayEquals(tableCorrect.getHeaders().toArray(), dataTable.getHeaders().toArray()),
@@ -241,7 +229,7 @@ class CSVTest {
         return data;
     }
 
-    private boolean compareRows(Table expected, Table actual){
+    private boolean compareRows(Table<?> expected, Table<?> actual){
         if (expected.getHeaders().size() != actual.getHeaders().size()) { return false; }
         for (int i = 0; i<expected.getHeaders().size();i++){
             if(!expected.getColumnAt(i).equals(actual.getColumnAt(i))){
