@@ -5,13 +5,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KNNTest {
+    KNNTest() throws URISyntaxException {
+    }
+
     private static CSV CSVReader;
     private static KNN knn;
+
+    private final String numbersWithLabels = Paths.get(getClass().getResource("CSVFiles/numbersWithLabels.csv").toURI()).toFile().getAbsolutePath();
+    private final String iris = Paths.get(getClass().getResource("CSVFiles/iris.csv").toURI()).toFile().getAbsolutePath();
 
     @BeforeAll
     static void initAll(){
@@ -26,7 +34,7 @@ class KNNTest {
     @Test
     @DisplayName("Test train number with labels")
     void testTrain() {
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/numbersWithLabels.csv"));
+        knn.train(CSVReader.readTableWithLabels(numbersWithLabels));
         Map<List<Double>, String> expected = createExpectedMap();
         assertEquals(expected, knn.getDataTable());
     }
@@ -59,14 +67,14 @@ class KNNTest {
     @Test
     @DisplayName("Test estimate sample size different than columns")
     void testEstimateSampleSizeDifferentThanColumns(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/numbersWithLabels.csv"));
+        knn.train(CSVReader.readTableWithLabels(numbersWithLabels));
         assertThrows(IllegalArgumentException.class, () -> knn.estimate(new LinkedList<>()));
     }
 
     @Test
     @DisplayName("Test estimate K bigger than number of rows")
     void testEstimateKBiggerThanNumberOfRows(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/numbersWithLabels.csv"));
+        knn.train(CSVReader.readTableWithLabels(numbersWithLabels));
         List<Double> sample = new ArrayList<>();
 
         sample.add(3.);
@@ -78,7 +86,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-versicolor")
     void testEstimateIrisVersicolor(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(6.6);
@@ -92,7 +100,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-versicolor again")
     void testEstimateIrisVersicolorAgain(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(6.1);
@@ -106,7 +114,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-setosa")
     void testEstimateIrisSetosa(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(5.1);
@@ -120,7 +128,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-setosa again")
     void testEstimateIrisSetosaAgain(){
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(5.0);
@@ -134,7 +142,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-virginica")
     void testEstimateIrisVirginica() {
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(5.9);
@@ -148,7 +156,7 @@ class KNNTest {
     @Test
     @DisplayName("test estimate Iris-virginica again")
     void testEstimateIrisVirginicaAgain() {
-        knn.train(CSVReader.readTableWithLabels("CSVFiles/iris.csv"));
+        knn.train(CSVReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(6.3);

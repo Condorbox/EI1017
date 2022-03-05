@@ -1,9 +1,11 @@
 package KNN;
 
 import CSV.TableWithLabel;
-import java.util.List;
+import Utilities.AlgorithmInterface;
 
-public interface KNNInterface {
-    public void train(TableWithLabel data);
-    String estimate(List<Double> sample);
+import java.util.List;
+import java.util.Map;
+
+public interface KNNInterface extends AlgorithmInterface<TableWithLabel,List<Double>, String> {
+    Map<List<Double>,String> getDataTable();
 }

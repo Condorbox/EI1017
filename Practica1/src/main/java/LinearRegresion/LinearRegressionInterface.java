@@ -1,10 +1,12 @@
 package LinearRegresion;
 
-public interface LinearRegressionInterface<T,W> {
-    void train(T data);
-    W estimate(W sample);
-    W[] estimateWithError(W sample);
-    W getSlope();
-    W getOrigin();
-    W getError();
+import CSV.Row;
+import CSV.Table;
+import Utilities.AlgorithmInterface;
+
+public interface LinearRegressionInterface extends AlgorithmInterface<Table<Row>, Double, Double> {
+    Double[] estimateWithError(Double sample);
+    Double getSlope();
+    Double getOrigin();
+    Double getError();
 }

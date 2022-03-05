@@ -72,6 +72,7 @@ public class KNN implements KNNInterface{
         return distances;
     }
 
+    @Override
     public Map<List<Double>,String> getDataTable(){
         return dataTable;
     }

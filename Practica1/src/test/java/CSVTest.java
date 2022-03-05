@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,9 +13,27 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CSVTest {
+    CSVTest() throws URISyntaxException {
+    }
+
     private static CSV csv;
     private static Table<Row> emptyTable;
     private static TableWithLabel emptyTableWithLabel;
+
+    /*private final String crashCatalonia = "src/main/resources/CSVFiles/crash_catalonia.csv";
+    //private final String emptyFile = "src/main/resources/CSVFiles/EmptyFile.csv";
+    //private final String fileOnlyHeaderAndLabel = "src/main/resources/CSVFiles/FileOnlyHeaderAndLabel.csv";
+    //private final String fileWithOnlyHeaders = "src/main/resources/CSVFiles/FileWithOnlyHeaders.csv";
+    //private final String numbers = "src/main/resources/CSVFiles/numbers.csv";
+    private final String numbersWithLabels = "src/main/resources/CSVFiles/numbersWithLabels.csv";*/
+
+    private final String crashCatalonia = Paths.get(getClass().getResource("CSVFiles/crash_catalonia.csv").toURI()).toFile().getAbsolutePath();
+    private final String emptyFile = Paths.get(getClass().getResource("CSVFiles/EmptyFile.csv").toURI()).toFile().getAbsolutePath();
+    private final String fileOnlyHeaderAndLabel = Paths.get(getClass().getResource("CSVFiles/FileOnlyHeaderAndLabel.csv").toURI()).toFile().getAbsolutePath();
+    private final String fileWithOnlyHeaders = Paths.get(getClass().getResource("CSVFiles/FileWithOnlyHeaders.csv").toURI()).toFile().getAbsolutePath();
+    private String numbers = Paths.get(getClass().getResource("CSVFiles/numbers.csv").toURI()).toFile().getAbsolutePath();
+    private final String numbersWithLabels = Paths.get(getClass().getResource("CSVFiles/numbersWithLabels.csv").toURI()).toFile().getAbsolutePath();
+
 
     @BeforeAll
     static void initAll(){
@@ -26,7 +46,7 @@ class CSVTest {
     @Test
     @DisplayName("Read file doesn't exit")
     void testReadFileDoesNotExit() {
-        Table table = csv.readTable("File.csv");
+        Table<Row> table = csv.readTable("File.csv");
         assertAll("Test read null file",
                 () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
                 () -> assertTrue(compareRows(emptyTable, table))
@@ -36,8 +56,8 @@ class CSVTest {
     @Test
     @DisplayName("File wrong format")
     void testReadFileWrongFormat() {
-        Table table = csv.readTable("File.csv");
-        assertAll("Test read null file",
+        Table table = csv.readTable(crashCatalonia);
+        assertAll("Test wrong format file",
                 () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
                 () -> assertTrue(compareRows(emptyTable, table))
         );
@@ -46,14 +66,14 @@ class CSVTest {
     @Test
     @DisplayName("Test getColumn incorrect index")
     void testGetColumnIncorrectIndex(){
-        Table table = csv.readTable("CSVFiles/numbers.csv");
+        Table table = csv.readTable(numbers);
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumnAt(-1));
     }
 
     @Test
     @DisplayName("Test getColumn")
     void testGetColumn(){
-        Table table = csv.readTable("CSVFiles/numbers.csv");
+        Table table = csv.readTable(numbers);
         List<Double> column = Arrays.asList(0., 1., 2., 3.);
         assertArrayEquals(column.toArray(), table.getColumnAt(0).toArray());
     }
@@ -61,32 +81,22 @@ class CSVTest {
     @Test
     @DisplayName("Test getRow incorrect index")
     void testGetRowIncorrectIndex(){
-        Table table = csv.readTable("CSVFiles/numbers.csv");
+        Table table = csv.readTable(numbers);
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getRowAt(-1));
     }
 
     @Test
     @DisplayName("Test getRow")
     void testGetRow(){
-        Table table = csv.readTable("CSVFiles/numbers.csv");
+        Table table = csv.readTable(numbers);
         Row row = new Row(Arrays.asList(1.,2.));
         assertEquals(row.getData(), table.getRowAt(1).getData());
     }
 
     @Test
-    @DisplayName("Read null File")
-    void testReadNullFile(){
-        Table table = csv.readTable("File.csv");
-        assertAll("Test read null file",
-                () -> assertArrayEquals(emptyTable.getHeaders().toArray(), table.getHeaders().toArray()),
-                () -> assertTrue(compareRows(emptyTable, table))
-        );
-    }
-
-    @Test
     @DisplayName("Read only headers file")
     void testReadOnlyHeadersFile(){
-        Table dataTable = csv.readTable("CSVFiles/FileWithOnlyHeaders.csv");
+        Table dataTable = csv.readTable(fileWithOnlyHeaders);
         List<String> headers = Arrays.asList("lenth", "class");
         List<Row> data = new ArrayList<>();
         Table tableCorrect = new Table<Row>(headers, data);
@@ -100,7 +110,7 @@ class CSVTest {
     @Test
     @DisplayName("Read file")
     void testReadFile(){
-        Table dataTable = csv.readTable("CSVFiles/numbers.csv");
+        Table dataTable = csv.readTable(numbers);
         List<String> headers = Arrays.asList("code", "number");
         List<Row> data = createRows();
         Table tableCorrect = new Table<Row>(headers, data);
@@ -125,8 +135,8 @@ class CSVTest {
     @Test
     @DisplayName("File wrong format")
     void testReadFileWithLabelWrongFormat() {
-        TableWithLabel table = csv.readTableWithLabels("File.csv");
-        assertAll("Test read null file",
+        TableWithLabel table = csv.readTableWithLabels(crashCatalonia);
+        assertAll("Test wrong format file",
                 () -> assertArrayEquals(emptyTableWithLabel.getHeaders().toArray(), table.getHeaders().toArray()),
                 () -> assertTrue(compareRowsWithLabels(emptyTableWithLabel, table))
         );
@@ -135,14 +145,14 @@ class CSVTest {
     @Test
     @DisplayName("Test getColumn with label incorrect index")
     void testGetColumnWithLabelIncorrectIndex(){
-        TableWithLabel table = csv.readTableWithLabels("CSVFiles/numbersWithLabels.csv");
+        TableWithLabel table = csv.readTableWithLabels(numbersWithLabels);
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> table.getColumnAt(-1));
     }
 
     @Test
     @DisplayName("Test getColumn with label")
     void testGetColumnWithLabel(){
-        TableWithLabel table = csv.readTableWithLabels("CSVFiles/numbersWithLabels.csv");
+        TableWithLabel table = csv.readTableWithLabels(numbersWithLabels);
         List<Double> column = Arrays.asList(0., 1., 2., 3.);
         assertArrayEquals(column.toArray(), table.getColumnAt(0).toArray());
     }
@@ -150,7 +160,7 @@ class CSVTest {
     @Test
     @DisplayName("Read null file with label")
     void testReadNullFileWithLabel(){
-        TableWithLabel dataTable = csv.readTableWithLabels("CSVFiles/EmptyFile.csv");
+        TableWithLabel dataTable = csv.readTableWithLabels(emptyFile);
         List<String> headers = new ArrayList<>();
         List<RowWithLabel> data = new ArrayList<>();
         TableWithLabel tableCorrect = new TableWithLabel(headers, data);
@@ -164,7 +174,7 @@ class CSVTest {
     @Test
     @DisplayName("Read only headers file with label")
     void testReadOnlyHeadersFileWithLabel(){
-        TableWithLabel dataTable = csv.readTableWithLabels("CSVFiles/FileWithOnlyHeaders.csv");
+        TableWithLabel dataTable = csv.readTableWithLabels(fileWithOnlyHeaders);
         List<String> headers = Arrays.asList("lenth", "class");
         List<RowWithLabel> data = new ArrayList<>();
         TableWithLabel tableCorrect = new TableWithLabel(headers, data);
@@ -178,7 +188,7 @@ class CSVTest {
     @Test
     @DisplayName("Read file only with header and label")
     void testReadFileOnlyHeaderAndLabel(){
-        TableWithLabel dataTable = csv.readTableWithLabels("CSVFiles/FileOnlyHeaderAndLabel.csv");
+        TableWithLabel dataTable = csv.readTableWithLabels(fileOnlyHeaderAndLabel);
         List<String> headers = Arrays.asList("class");
         List<RowWithLabel> data = createRowOnlyLabel();
         TableWithLabel tableCorrect = new TableWithLabel(headers, data);
@@ -192,7 +202,7 @@ class CSVTest {
     @Test
     @DisplayName("Read file with labels")
     void testReadFileWithLabel(){
-        TableWithLabel dataTable = csv.readTableWithLabels("CSVFiles/numbersWithLabels.csv");
+        TableWithLabel dataTable = csv.readTableWithLabels(numbersWithLabels);
         List<String> headers = Arrays.asList("code", "number", "class");
         List<RowWithLabel> data = createRowsWithLabel();
         TableWithLabel tableCorrect = new TableWithLabel(headers,data);
@@ -252,4 +262,5 @@ class CSVTest {
 
         return expected.getLabelColumn().equals(actual.getLabelColumn());
     }
+
 }

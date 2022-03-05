@@ -5,7 +5,7 @@ import CSV.Table;
 import Utilities.Arithmetic;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class LinearRegression implements LinearRegressionInterface<Table<Row>, Double> {
+public class LinearRegression implements LinearRegressionInterface{
     private double slope;
     private double origin;
     private double error;
