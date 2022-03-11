@@ -15,7 +15,7 @@ class KNNTest {
     private static KNN knn;
 
     private final String numbersWithLabels = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/numbersWithLabels.csv");
-    private final String iris =GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/iris.csv");
+    private final String iris = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/iris.csv");
 
     @BeforeAll
     static void initAll(){
