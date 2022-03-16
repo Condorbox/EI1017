@@ -11,7 +11,6 @@ public class DurstenfeldAlgorithm {
 
         if (length < n) return null;
 
-        //We don't need to shuffle the whole list
         for (int i = length - 1; i >= length - n; --i)
         {
             Collections.swap(list, i , r.nextInt(i + 1));
