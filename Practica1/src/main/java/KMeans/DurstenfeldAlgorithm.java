@@ -1,4 +1,4 @@
-package Kmeans;
+package KMeans;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +15,7 @@ public class DurstenfeldAlgorithm {
         {
             Collections.swap(list, i , r.nextInt(i + 1));
         }
+
         return list.subList(length - n, length);
     }
 
