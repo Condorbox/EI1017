@@ -1,5 +1,9 @@
 package Utilities;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.List;
+
 public final class Arithmetic {
     private Arithmetic(){}
 
@@ -45,5 +49,12 @@ public final class Arithmetic {
         }
 
         return Math.sqrt(distance);
+    }
+
+    public static double euclideanDistance(List<Double> to, List<Double> from){
+        double[] toArray = ArrayUtils.toPrimitive(to.stream().toArray(Double[]::new));
+        double[] fromArray = ArrayUtils.toPrimitive(from.stream().toArray(Double[]::new));
+
+        return euclideanDistance(toArray, fromArray);
     }
 }
