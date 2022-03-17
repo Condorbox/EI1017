@@ -9,6 +9,11 @@ public class DistanceData implements Comparable<DistanceData> { //Middle-man dat
         this.type = type;
     }
 
+    public DistanceData(){
+        this.distance = Double.MAX_VALUE;
+        this.type = null;
+    }
+
     @Override
     public int compareTo(DistanceData otherDistance) {
         return Double.compare(distance, otherDistance.getDistance());
@@ -19,5 +24,12 @@ public class DistanceData implements Comparable<DistanceData> { //Middle-man dat
     }
     public String getType(){
         return type;
+    }
+
+    public  void setDistance(double distance){
+        this.distance = distance;
+    }
+    public  void setType(String type){
+        this.type = type;
     }
 }
