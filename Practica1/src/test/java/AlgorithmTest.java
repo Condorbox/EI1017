@@ -1,8 +1,16 @@
 import CSV.CSV;
+import CSV.Row;
+
+import KMeans.KMeans;
+import KMeans.KMeansEstimateType;
+
 import KNN.KNN;
+
 import LinearRegresion.LinearRegression;
+
 import Utilities.AlgorithmInterface;
 import Utilities.GetAbsolutePath;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,30 +21,31 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AlgorithmTest {
-    private static CSV CSVReader;
+    private static CSV csvReader;
     AlgorithmInterface algorithm;
 
     private final String milesDollars = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/miles_dollars.csv");
     private final String iris = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/iris.csv");
+    private final String irisWithOutLabels = GetAbsolutePath.getAbsolutePathFromResource("/CSVFiles/irisWithOutLabel.csv");
 
     @BeforeAll
     static void initAll(){
-        CSVReader = new CSV();
+        csvReader = new CSV();
     }
 
     @Test
     @DisplayName("Test Algorithm Interface Linear Regression")
-    void TestLinearRegression(){
+    void testLinearRegression(){
         algorithm = new LinearRegression();
-        algorithm.train(CSVReader.readTable(milesDollars));
+        algorithm.train(csvReader.readTable(milesDollars));
         assertEquals(286.502613676227, algorithm.estimate(10.));
     }
 
     @Test
     @DisplayName("Test Algorithm Interface KNN")
-    void TestKNN(){
+    void testKNN(){
         algorithm = new KNN();
-        algorithm.train(CSVReader.readTableWithLabels(iris));
+        algorithm.train(csvReader.readTableWithLabels(iris));
         List<Double> sample = new ArrayList<>();
 
         sample.add(6.1);
@@ -45,5 +54,20 @@ public class AlgorithmTest {
         sample.add(1.4);
 
         assertEquals("Iris-versicolor", algorithm.estimate(sample));
+    }
+
+    @Test
+    @DisplayName("Test Algorithm Interface KMeans")
+    void testKMeans(){
+        algorithm = new KMeans(4, 4, 9999999, KMeansEstimateType.knnType);
+        algorithm.train(csvReader.readTable(irisWithOutLabels));
+
+        List<Double> attributes = new ArrayList<>();
+        attributes.add(7.0);
+        attributes.add(3.2);
+        attributes.add(4.7);
+        attributes.add(1.4);
+
+        assertEquals("Cluster-2", algorithm.estimate(new Row(attributes)));
     }
 }
