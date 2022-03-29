@@ -38,23 +38,4 @@ public final class Arithmetic {
         }
         return sum / xData.length;
     }
-
-    public static double euclideanDistance(double[] from, double[] to){
-        if (from == null || to == null) throw new NullPointerException("data can't be nulls");
-        if (from.length != to.length) throw new IllegalArgumentException("Vectors must have the same size");
-        double distance = 0;
-
-        for (int i=0;i<from.length;i++){
-            distance += Math.pow(from[i]-to[i],2);
-        }
-
-        return Math.sqrt(distance);
-    }
-
-    public static double euclideanDistance(List<Double> to, List<Double> from){
-        double[] toArray = ArrayUtils.toPrimitive(to.stream().toArray(Double[]::new));
-        double[] fromArray = ArrayUtils.toPrimitive(from.stream().toArray(Double[]::new));
-
-        return euclideanDistance(toArray, fromArray);
-    }
 }

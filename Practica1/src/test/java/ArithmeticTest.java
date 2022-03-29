@@ -11,7 +11,6 @@ class ArithmeticTest {
     double[] dataOneElement = {5};
     double[] dataSameElements = {4,4,4,4};
     double[] data = {1,2,3,4,5};
-    double[] data2 = {3,5,-1,2,7};
 
     ///Mean
     @Test
@@ -141,42 +140,5 @@ class ArithmeticTest {
     @DisplayName("Test Covariance")
     void testCovariance(){
         assertEquals(2, Arithmetic.Covariance(data, data));
-    }
-
-    //Distance
-    @Test
-    @DisplayName("Test Distance null")
-    void testDistanceNull(){
-        assertThrows(NullPointerException.class, () -> Arithmetic.euclideanDistance(dataNull, dataSameElements));
-    }
-
-    @Test
-    @DisplayName("Test Distance different data size")
-    void testDistanceDifferentSize(){
-        assertThrows(IllegalArgumentException.class, () -> Arithmetic.euclideanDistance(dataOneElement, dataSameElements));
-    }
-
-    @Test
-    @DisplayName("Test Distance empty")
-    void testDistanceEmpty(){
-        assertEquals(0, Arithmetic.euclideanDistance(dataEmpty, dataEmpty));
-    }
-
-    @Test
-    @DisplayName("Test Distance one element")
-    void testDistanceOneElement(){
-        assertEquals(0, Arithmetic.euclideanDistance(dataOneElement, dataOneElement));
-    }
-
-    @Test
-    @DisplayName("Test Distance same elements")
-    void testDistanceSameElements(){
-        assertEquals(0, Arithmetic.euclideanDistance(dataSameElements, dataSameElements));
-    }
-
-    @Test
-    @DisplayName("Test Distance")
-    void testDistance(){
-        assertEquals(6.082762530298219, Arithmetic.euclideanDistance(data2, data));
     }
 }

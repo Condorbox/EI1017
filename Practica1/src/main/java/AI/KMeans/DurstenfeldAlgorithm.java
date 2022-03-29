@@ -1,4 +1,4 @@
-package KMeans;
+package AI.KMeans;
 
 import java.util.Collections;
 import java.util.List;

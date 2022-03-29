@@ -1,4 +1,4 @@
-package LinearRegresion;
+package AI.LinearRegresion;
 
 import CSV.Row;
 import CSV.Table;

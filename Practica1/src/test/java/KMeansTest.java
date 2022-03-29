@@ -1,9 +1,10 @@
 import CSV.CSV;
 import CSV.Row;
 
-import KMeans.KMeans;
-import KMeans.KMeansEstimateType;
+import AI.KMeans.KMeans;
+import AI.KMeans.KMeansEstimateType;
 
+import Patterns.StrategyPattern.EuclideanDistance;
 import Utilities.GetAbsolutePath;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ class KMeansTest {
     @BeforeEach
     void setUp() {
         csvReader = new CSV();
-        kMeans = new KMeans(4, 10, 9999999, KMeansEstimateType.knnType);
+        kMeans = new KMeans(4, 10, 9999999, KMeansEstimateType.knnType, new EuclideanDistance());
     }
 
     @Test

@@ -1,22 +1,30 @@
-package KNN;
+package AI.KNN;
 
-import CSV.RowWithLabel;
 import CSV.TableWithLabel;
-import Utilities.Arithmetic;
-import org.apache.commons.lang3.ArrayUtils;
+import CSV.RowWithLabel;
+
+import AI.DistanceClient;
+
+import Patterns.StrategyPattern.Distance;
+import Patterns.StrategyPattern.EuclideanDistance;
 
 import java.util.*;
 
-public class KNN implements KNNInterface{
+public class KNN implements KNNInterface, DistanceClient {
     private final int k; //k nearest neighbors
     private final Map<List<Double>,String> dataTable;
+    private Distance distance;
+
     public KNN(){
+        this.distance = new EuclideanDistance();
         this.k = 5;
         this.dataTable = new HashMap<>();
     }
-    public KNN(int k, HashMap<List<Double>, String> data){
+
+    public KNN(int k, HashMap<List<Double>, String> data, Distance distance){
         this.k = k;
         this.dataTable = data;
+        this.distance = distance;
     }
 
     @Override
@@ -30,8 +38,7 @@ public class KNN implements KNNInterface{
     public String estimate(List<Double> sample) {
         List<Double> column = (List<Double>) dataTable.keySet().toArray()[0];
         if (sample.size() != column.size()) throw new IllegalArgumentException("sample size must be equal size of the number of columns");
-        double[] sampleArray =ArrayUtils.toPrimitive(sample.stream().toArray(Double[]::new));
-        List<DistanceData> distances = addDistances(sampleArray);
+        List<DistanceData> distances = addDistances(sample);
         Collections.sort(distances);
         DistanceData[] kNearestNeighbours = selectKNearestNeighbors(distances);
         return mostCommon(kNearestNeighbours);
@@ -48,7 +55,7 @@ public class KNN implements KNNInterface{
             }
         }
         List<Map.Entry<String, Integer>> sortedMap = new LinkedList<>(repetitions.entrySet());
-        Collections.sort(sortedMap, Map.Entry.comparingByValue());
+        sortedMap.sort(Map.Entry.comparingByValue());
         return sortedMap.get(sortedMap.size()-1).getKey();
     }
 
@@ -63,11 +70,11 @@ public class KNN implements KNNInterface{
         return kNearestNeighbours;
     }
 
-    private List<DistanceData> addDistances(double[] sample){
+    private List<DistanceData> addDistances(List<Double> sample){
         List<DistanceData> distances = new ArrayList<>();
         for (Map.Entry<List<Double>, String> entry : dataTable.entrySet()){
-            double[] distance = ArrayUtils.toPrimitive(entry.getKey().stream().toArray(Double[]::new));
-            distances.add(new DistanceData(Arithmetic.euclideanDistance(distance, sample), entry.getValue()));
+            List<Double> data = entry.getKey();
+            distances.add(new DistanceData(distance.calculateDistance(data, sample), entry.getValue()));
         }
         return distances;
     }
@@ -77,4 +84,8 @@ public class KNN implements KNNInterface{
         return dataTable;
     }
 
+    @Override
+    public void setDistance(Distance distance) {
+        this.distance = distance;
+    }
 }

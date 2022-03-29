@@ -1,32 +1,37 @@
-package KMeans;
+package AI.KMeans;
 
 import CSV.Row;
 import CSV.RowWithLabel;
 import CSV.Table;
-
 import CSV.TableWithLabel;
-import KNN.DistanceData;
 
-import KNN.KNN;
+import AI.DistanceClient;
+import AI.KNN.DistanceData;
+import AI.KNN.KNN;
+
+import Patterns.StrategyPattern.Distance;
+
+import Patterns.StrategyPattern.EuclideanDistance;
 
 import Utilities.AlgorithmInterface;
-import Utilities.Arithmetic;
 
 import java.util.*;
 
-public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
+public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, DistanceClient {
     private final int numberClusters;
     private final int iterations;
     private final long seed;
     private KMeansEstimateType estimateType;
     private List<Row> centroid;
     private List<List<RowWithLabel>> dataGroup;
+    private Distance distance;
 
-    public KMeans(int numberClusters, int iterations, long seed, KMeansEstimateType estimateType){
+    public KMeans(int numberClusters, int iterations, long seed, KMeansEstimateType estimateType, Distance distance){
         this.numberClusters = numberClusters;
         this.iterations = iterations;
         this.seed = seed;
         this.estimateType = estimateType;
+        this.distance = distance;
         dataGroup = new ArrayList<>();
     }
 
@@ -35,6 +40,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
         this.iterations = 3;
         this.seed = System.currentTimeMillis();
         estimateType = KMeansEstimateType.knnType;
+        distance = new EuclideanDistance();
         dataGroup = new ArrayList<>();
     }
 
@@ -65,9 +71,9 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
     private DistanceData choseGroup(List<Double> data){ //Step 2
         DistanceData distanceData = new DistanceData();
         for (int i = 0; i<centroid.size(); i++){
-            double distance = Arithmetic.euclideanDistance(centroid.get(i).getData(), data);
-            if (distanceData.getType() == null || distanceData.getDistance() >= distance){
-                distanceData.setDistance(distance);
+            double distanceNumber = distance.calculateDistance(centroid.get(i).getData(), data);
+            if (distanceData.getType() == null || distanceData.getDistance() >= distanceNumber){
+                distanceData.setDistance(distanceNumber);
                 distanceData.setType(String.valueOf(i));
             }
         }
@@ -117,6 +123,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
             dataTable.addAll(group);
         }
         KNN knn = new KNN();
+        knn.setDistance(distance);
         knn.train(new TableWithLabel(new ArrayList<>(), dataTable));
         return knn.estimate(sample.getData());
     }
@@ -124,9 +131,9 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
     private String estimateMean(Row sample){
          DistanceData distanceData = new DistanceData();
         for (int i = 0; i<numberClusters; i++){
-            double distance = Arithmetic.euclideanDistance(centroid.get(i).getData(), sample.getData());//2
-            if (distanceData.getType() == null || distanceData.getDistance() < distance){
-                distanceData.setDistance(distance);
+            double distanceNumber = distance.calculateDistance(centroid.get(i).getData(), sample.getData());
+            if (distanceData.getType() == null || distanceData.getDistance() < distanceNumber){
+                distanceData.setDistance(distanceNumber);
                 distanceData.setType(String.valueOf(i + 1));
             }
         }
@@ -135,5 +142,10 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>{
 
     public void setEstimateType(KMeansEstimateType estimateType){
         this.estimateType = estimateType;
+    }
+
+    @Override
+    public void setDistance(Distance distance) {
+        this.distance = distance;
     }
 }

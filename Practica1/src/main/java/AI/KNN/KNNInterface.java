@@ -1,4 +1,4 @@
-package KNN;
+package AI.KNN;
 
 import CSV.TableWithLabel;
 import Utilities.AlgorithmInterface;

@@ -1,4 +1,4 @@
-package KMeans;
+package AI.KMeans;
 
 public enum KMeansEstimateType {
     meanType,
