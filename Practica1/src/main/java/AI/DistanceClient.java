@@ -1,7 +1,7 @@
 package AI;
 
-import Patterns.StrategyPattern.Distance;
+import Patterns.StrategyPattern.IDistance;
 
 public interface DistanceClient {
-    void setDistance(Distance distance);
+    void setDistance(IDistance distance);
 }

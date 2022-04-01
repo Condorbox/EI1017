@@ -9,9 +9,8 @@ import AI.DistanceClient;
 import AI.KNN.DistanceData;
 import AI.KNN.KNN;
 
-import Patterns.StrategyPattern.Distance;
-
-import Patterns.StrategyPattern.EuclideanDistance;
+import Patterns.FactoryPattern.DistanceType;
+import Patterns.StrategyPattern.IDistance;
 
 import Utilities.AlgorithmInterface;
 
@@ -24,14 +23,14 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
     private KMeansEstimateType estimateType;
     private List<Row> centroid;
     private List<List<RowWithLabel>> dataGroup;
-    private Distance distance;
+    private IDistance distance;
 
-    public KMeans(int numberClusters, int iterations, long seed, KMeansEstimateType estimateType, Distance distance){
+    public KMeans(int numberClusters, int iterations, long seed, KMeansEstimateType estimateType, DistanceType distanceType){
         this.numberClusters = numberClusters;
         this.iterations = iterations;
         this.seed = seed;
         this.estimateType = estimateType;
-        this.distance = distance;
+        this.distance = distanceType.getDistance();
         dataGroup = new ArrayList<>();
     }
 
@@ -40,7 +39,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
         this.iterations = 3;
         this.seed = System.currentTimeMillis();
         estimateType = KMeansEstimateType.knnType;
-        distance = new EuclideanDistance();
+        distance = DistanceType.EUCLIDEAN.getDistance();
         dataGroup = new ArrayList<>();
     }
 
@@ -145,7 +144,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
     }
 
     @Override
-    public void setDistance(Distance distance) {
+    public void setDistance(IDistance distance) {
         this.distance = distance;
     }
 }

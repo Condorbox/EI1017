@@ -4,7 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
 
-public class EuclideanDistance implements Distance {
+public class EuclideanDistance implements IDistance {
     @Override
     public double calculateDistance(List<Double> p, List<Double> q) {
         if (p == null || q == null) throw new NullPointerException("data can't be nulls");

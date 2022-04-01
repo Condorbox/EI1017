@@ -8,6 +8,7 @@ import AI.KNN.KNN;
 
 import AI.LinearRegresion.LinearRegression;
 
+import Patterns.FactoryPattern.DistanceType;
 import Patterns.StrategyPattern.EuclideanDistance;
 import Utilities.AlgorithmInterface;
 import Utilities.GetAbsolutePath;
@@ -60,7 +61,7 @@ public class AlgorithmTest {
     @Test
     @DisplayName("Test Algorithm Interface KMeans")
     void testKMeans(){
-        algorithm = new KMeans(4, 4, 9999999, KMeansEstimateType.knnType, new EuclideanDistance());
+        algorithm = new KMeans(4, 4, 9999999, KMeansEstimateType.knnType, DistanceType.EUCLIDEAN);
         algorithm.train(csvReader.readTable(irisWithOutLabels));
 
         List<Double> attributes = new ArrayList<>();

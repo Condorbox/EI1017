@@ -4,6 +4,7 @@ import CSV.Row;
 import AI.KMeans.KMeans;
 import AI.KMeans.KMeansEstimateType;
 
+import Patterns.FactoryPattern.DistanceType;
 import Patterns.StrategyPattern.EuclideanDistance;
 import Utilities.GetAbsolutePath;
 
@@ -27,7 +28,7 @@ class KMeansTest {
     @BeforeEach
     void setUp() {
         csvReader = new CSV();
-        kMeans = new KMeans(4, 10, 9999999, KMeansEstimateType.knnType, new EuclideanDistance());
+        kMeans = new KMeans(4, 10, 9999999, KMeansEstimateType.knnType, DistanceType.EUCLIDEAN);
     }
 
     @Test

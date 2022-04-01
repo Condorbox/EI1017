@@ -5,26 +5,26 @@ import CSV.RowWithLabel;
 
 import AI.DistanceClient;
 
-import Patterns.StrategyPattern.Distance;
-import Patterns.StrategyPattern.EuclideanDistance;
+import Patterns.FactoryPattern.DistanceType;
+import Patterns.StrategyPattern.IDistance;
 
 import java.util.*;
 
 public class KNN implements KNNInterface, DistanceClient {
     private final int k; //k nearest neighbors
     private final Map<List<Double>,String> dataTable;
-    private Distance distance;
+    private IDistance distance;
 
-    public KNN(){
-        this.distance = new EuclideanDistance();
+    public KNN() {
         this.k = 5;
         this.dataTable = new HashMap<>();
+        this.distance = DistanceType.EUCLIDEAN.getDistance();
     }
 
-    public KNN(int k, HashMap<List<Double>, String> data, Distance distance){
+    public KNN(int k, HashMap<List<Double>, String> data, DistanceType distanceType){
         this.k = k;
         this.dataTable = data;
-        this.distance = distance;
+        this.distance = distanceType.getDistance();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class KNN implements KNNInterface, DistanceClient {
         List<DistanceData> distances = new ArrayList<>();
         for (Map.Entry<List<Double>, String> entry : dataTable.entrySet()){
             List<Double> data = entry.getKey();
-            distances.add(new DistanceData(distance.calculateDistance(data, sample), entry.getValue()));
+            distances.add(new DistanceData(calculateDistance(data, sample), entry.getValue()));
         }
         return distances;
     }
@@ -85,7 +85,15 @@ public class KNN implements KNNInterface, DistanceClient {
     }
 
     @Override
-    public void setDistance(Distance distance) {
+    public void setDistance(IDistance distance) {
         this.distance = distance;
+    }
+
+    public void setDistance(DistanceType distanceType){
+        this.distance = distanceType.getDistance();
+    }
+
+    public double calculateDistance(List<Double> data, List<Double> sample){
+        return distance.calculateDistance(data, sample);
     }
 }

@@ -2,6 +2,6 @@ package Patterns.StrategyPattern;
 
 import java.util.List;
 
-public interface Distance {
+public interface IDistance {
     double calculateDistance(List<Double> p, List<Double> q);
 }
