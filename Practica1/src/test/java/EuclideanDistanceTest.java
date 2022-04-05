@@ -1,4 +1,7 @@
-import Patterns.StrategyPattern.EuclideanDistance;
+import Patterns.FactoryPattern.DistanceType;
+
+import Patterns.StrategyPattern.IDistance;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EuclideanDistanceTest {
 
-    private static EuclideanDistance distance;
+    private static IDistance distance;
 
     List<Double> dataNull = null;
     List<Double> dataEmpty = List.of();
@@ -20,7 +23,7 @@ class EuclideanDistanceTest {
 
     @BeforeAll
     static void initAll() {
-        distance = new EuclideanDistance();
+        distance = DistanceType.EUCLIDEAN.getDistance();
     }
 
     @Test

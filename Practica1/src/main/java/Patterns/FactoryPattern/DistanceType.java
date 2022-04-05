@@ -4,7 +4,7 @@ import Patterns.StrategyPattern.EuclideanDistance;
 import Patterns.StrategyPattern.IDistance;
 import Patterns.StrategyPattern.ManhattanDistance;
 
-public enum DistanceType implements IFactory {
+public enum DistanceType  {
     EUCLIDEAN(new EuclideanDistance()),
     MANHATTAN(new ManhattanDistance());
 
@@ -14,7 +14,6 @@ public enum DistanceType implements IFactory {
         this.distance = distance;
     }
 
-    @Override
     public IDistance getDistance(){
         return distance;
     }

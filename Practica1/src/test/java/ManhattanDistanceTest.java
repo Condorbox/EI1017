@@ -1,4 +1,7 @@
-import Patterns.StrategyPattern.ManhattanDistance;
+import Patterns.FactoryPattern.DistanceType;
+
+import Patterns.StrategyPattern.IDistance;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ManhattanDistanceTest {
-    private static ManhattanDistance distance;
+    private static IDistance distance;
 
     List<Double> dataNull = null;
     List<Double> dataEmpty = List.of();
@@ -19,7 +22,7 @@ class ManhattanDistanceTest {
 
     @BeforeAll
     static void initAll() {
-        distance = new ManhattanDistance();
+        distance = DistanceType.MANHATTAN.getDistance();
     }
 
     @Test

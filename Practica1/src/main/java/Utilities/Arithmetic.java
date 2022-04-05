@@ -1,9 +1,5 @@
 package Utilities;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.List;
-
 public final class Arithmetic {
     private Arithmetic(){}
 

@@ -5,7 +5,7 @@ import AI.KMeans.KMeans;
 import AI.KMeans.KMeansEstimateType;
 
 import Patterns.FactoryPattern.DistanceType;
-import Patterns.StrategyPattern.EuclideanDistance;
+
 import Utilities.GetAbsolutePath;
 
 import org.junit.jupiter.api.BeforeEach;

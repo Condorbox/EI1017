@@ -9,7 +9,7 @@ import AI.KNN.KNN;
 import AI.LinearRegresion.LinearRegression;
 
 import Patterns.FactoryPattern.DistanceType;
-import Patterns.StrategyPattern.EuclideanDistance;
+
 import Utilities.AlgorithmInterface;
 import Utilities.GetAbsolutePath;
 
