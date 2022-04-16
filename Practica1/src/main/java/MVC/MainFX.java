@@ -1,12 +1,9 @@
 package MVC;
 
+import MVC.Controller.Controller;
+import MVC.Model.Model;
+import MVC.View.View;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -18,25 +15,16 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
-        StackPane root = new StackPane();
+        View viewKnn = new View(primaryStage);
+        Controller controller = new Controller();
+        Model model = new Model();
 
-        Button btn = new Button("Hola");
+        model.setView(viewKnn);
+        controller.setModel(model);
+        controller.setView(viewKnn);
+        viewKnn.setController(controller);
+        viewKnn.setModel(model);
 
-        TabPane tabPane = new TabPane();
-
-        Tab tabKnn = new Tab("KNN");
-        tabKnn.setClosable(false);
-
-        VBox vBox = new VBox(10);
-        vBox.getChildren().addAll(btn);
-        tabKnn.setContent(vBox);
-
-        tabPane.getTabs().add(tabKnn);
-        root.getChildren().add(tabPane);
-        tabPane.getSelectionModel().select(0); //Default Selected
-
-        primaryStage.setScene(new Scene(root, 250, 250));
-        primaryStage.show();
+        viewKnn.createGUI();
     }
 }
