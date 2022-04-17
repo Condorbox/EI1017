@@ -5,11 +5,14 @@ import MVC.View.IView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Controller implements IController {
     private IModel model;
     private IView view;
 
-    private FileChooser fileChooser;
+    private final FileChooser fileChooser;
 
     public Controller(){
         fileChooser = new FileChooser();
@@ -35,5 +38,20 @@ public class Controller implements IController {
         if(xIndex >= 0 && yIndex >= 0){
             view.updateChart(xIndex, yIndex);
         }
+    }
+
+    @Override
+    public void setDistance(int distanceIndex) {
+        model.setDistance(distanceIndex);
+    }
+
+    @Override
+    public void estimateNewPoint(String newPoint) {
+        String[] coordinates =  newPoint.split(",");
+        List<Double> estimateCoordinates = new LinkedList<>();
+        for (String coordinate: coordinates) {
+            estimateCoordinates.add(Double.parseDouble(coordinate));
+        }
+        model.estimateNewPoint(estimateCoordinates);
     }
 }

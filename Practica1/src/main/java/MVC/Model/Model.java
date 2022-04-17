@@ -3,17 +3,15 @@ package MVC.Model;
 import AI.KNN.KNN;
 import CSV.CSV;
 import MVC.View.IView;
+import Patterns.FactoryPattern.DistanceType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Model implements IModel {
     private IView view;
-    private KNN knn;
-    private CSV CSVReader;
+    private final KNN knn;
+    private final CSV CSVReader;
 
     private Map<String, List<List<Double>>> points;
     private List<String> header;
@@ -40,13 +38,17 @@ public class Model implements IModel {
     private void updatePoints(){
         points = new HashMap<>();
         for (Map.Entry<List<Double>, String> entry: knn.getDataTable().entrySet()) {
-            if(points.containsKey(entry.getValue())){
-                points.get(entry.getValue()).add(entry.getKey());
-            }else{
-                List<List<Double>> newPoint = new ArrayList<>();
-                newPoint.add(entry.getKey());
-                points.put(entry.getValue(), newPoint);
-            }
+            putPoint(entry.getValue(), entry.getKey());
+        }
+    }
+
+    private void putPoint(String key, List<Double> value){
+        if (points.containsKey(key)){
+            points.get(key).add(value);
+        }else{
+            List<List<Double>> newPoint = new LinkedList<>();
+            newPoint.add(value);
+            points.put(key, newPoint);
         }
     }
 
@@ -58,5 +60,33 @@ public class Model implements IModel {
     @Override
     public Map<String, List<List<Double>>> getPoints(){
         return points;
+    }
+
+    @Override
+    public void setDistance(int distanceIndex) {
+        knn.setDistance(DistanceType.indexToDistance(distanceIndex));
+    }
+
+    @Override
+    public void estimateNewPoint(List<Double> newPoint) {
+        String label = knn.estimate(newPoint);
+        if (alreadyContainsPoint(label, newPoint)){
+            label = "Already contains this point";
+        }else{
+            putPoint(label, newPoint);
+            view.chartNewPoint(label, newPoint);
+        }
+        view.updateEstimateLabel(label);
+
+    }
+
+    private boolean alreadyContainsPoint(String label, List<Double> newPoint){
+        boolean contains = false;
+        for (List<Double> value : points.get(label)) {
+            contains = value.equals(newPoint);
+            if (contains)
+                break;
+        }
+        return contains;
     }
 }

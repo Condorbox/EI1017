@@ -17,4 +17,8 @@ public enum DistanceType  {
     public IDistance getDistance(){
         return distance;
     }
+
+    public static DistanceType indexToDistance(int index){
+        return values()[index];
+    }
 }

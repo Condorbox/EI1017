@@ -12,6 +12,7 @@ import java.util.*;
 
 public class KNN implements KNNInterface, DistanceClient {
     private final int k; //k nearest neighbors
+    private List<String> header;
     private final Map<List<Double>,String> dataTable;
     private IDistance distance;
 
@@ -19,16 +20,19 @@ public class KNN implements KNNInterface, DistanceClient {
         this.k = 5;
         this.dataTable = new HashMap<>();
         this.distance = DistanceType.EUCLIDEAN.getDistance();
+        this.header = new ArrayList<>();
     }
 
-    public KNN(int k, HashMap<List<Double>, String> data, DistanceType distanceType){
+    public KNN(int k, HashMap<List<Double>, String> data, List<String> label, DistanceType distanceType){
         this.k = k;
         this.dataTable = data;
+        this.header = label;
         this.distance = distanceType.getDistance();
     }
 
     @Override
     public void train(TableWithLabel data) {
+        header = data.getHeaders();
         for (RowWithLabel row: data.getDataTable()) {
             dataTable.put(row.getData(), row.getLabel());
         }
@@ -87,6 +91,10 @@ public class KNN implements KNNInterface, DistanceClient {
     @Override
     public void setDistance(IDistance distance) {
         this.distance = distance;
+    }
+
+    public List<String> getHeader(){
+        return header;
     }
 
     public void setDistance(DistanceType distanceType){

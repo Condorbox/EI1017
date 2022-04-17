@@ -2,18 +2,22 @@ package MVC.View;
 
 import MVC.Controller.IController;
 import MVC.Model.IModel;
+import Patterns.FactoryPattern.DistanceType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -26,15 +30,21 @@ public class View implements IView{
     private Label fileName;
     private ScatterChart scatterChart;
     private ObservableList<String> comparableList;
-    ComboBox comboX;
-    ComboBox comboY;
+    private ObservableList<DistanceType> distanceType;
+    private ComboBox comboX;
+    private ComboBox comboY;
+    private ComboBox comboDistance;
+    private TextField newPoint;
+    private TextField newPointText;
+    private Button estimateButton;
+
 
     public View(Stage stage){
         this.stage = stage;
     }
 
     @Override
-    public void createGUI() {
+    public FlowPane createGUI() {
         stage.setTitle("KNN");
 
         Button btn = new Button("Select a file");
@@ -43,31 +53,30 @@ public class View implements IView{
         comboX = new ComboBox(comparableList);
         comboY = new ComboBox(comparableList);
 
+        distanceType = FXCollections.observableArrayList(EnumSet.allOf(DistanceType.class));
+        comboDistance = new ComboBox(distanceType);
+        comboDistance.getSelectionModel().selectFirst();
+
+        newPoint = new TextField("New Point");
+        newPointText = new TextField();
+        newPointText.setDisable(true);
+        estimateButton = new Button("Estimate");
+
+        VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateButton);
+
         btn.setOnAction(actionEvent -> controller.updateFile(stage));
         comboX.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
         comboY.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
 
-        FlowPane flowPane = new FlowPane(btn, fileName, scatterChart, comboX, comboY);
+        comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
+        estimateButton.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
+
+        FlowPane flowPane = new FlowPane(btn, fileName, scatterChart, comboX, comboY, newPointVBox);
         flowPane.setHgap(10);
         flowPane.setVgap(10);
         flowPane.setPadding(new Insets(10));
 
-        StackPane root = new StackPane();
-
-        TabPane tabPane = new TabPane();
-        Tab tabKnn = new Tab("KNN");
-        tabKnn.setClosable(false);
-        tabKnn.setContent(flowPane);
-
-        tabPane.getTabs().add(tabKnn);
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-
-        root.getChildren().add(tabPane);
-        tabPane.getSelectionModel().select(0); //Default Selected
-
-        stage.show();
+        return flowPane;
     }
 
     @Override
@@ -98,7 +107,7 @@ public class View implements IView{
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         ScatterChart scatterChart = new ScatterChart (xAxis, yAxis);
-        scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("root.css").toExternalForm());
+        //scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("root.css").toExternalForm()); //TODO arreglar el Stylesheet
 
         return  scatterChart;
     }
@@ -122,7 +131,18 @@ public class View implements IView{
             }
             scatterChart.getData().add(series);
         }
+    }
 
-        System.out.println(scatterChart.getStylesheets()); //TODO arreglar el Stylesheet
+    @Override
+    public void updateEstimateLabel(String label) {
+        newPointText.setText(label);
+    }
+
+    @Override
+    public void chartNewPoint(String label, List<Double> data) {
+        XYChart.Series series = new XYChart.Series();
+        series.getData().add(new XYChart.Data<>(data.get(comboX.getSelectionModel().getSelectedIndex()), data.get(comboY.getSelectionModel().getSelectedIndex())));
+        series.setName("new Point");
+        scatterChart.getData().add(series);
     }
 }

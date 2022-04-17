@@ -9,4 +9,6 @@ public interface IController {
     void setModel(IModel model);
     void setView(IView view);
     void changeXGraphic(int xIndex, int yIndex);
+    void setDistance(int distanceIndex);
+    void estimateNewPoint(String newPoint);
 }

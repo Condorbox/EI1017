@@ -8,4 +8,5 @@ import java.util.Map;
 
 public interface KNNInterface extends AlgorithmInterface<TableWithLabel,List<Double>, String> {
     Map<List<Double>,String> getDataTable();
+    List<String> getHeader();
 }
