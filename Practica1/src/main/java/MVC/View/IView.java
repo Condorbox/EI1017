@@ -13,5 +13,8 @@ public interface IView {
     void setModel(IModel model);
     void updateChart(int xIndex, int yIndex);
     void updateEstimateLabel(String label);
-    void chartNewPoint(String label, List<Double> data);
+    void chartNewPoint(String label, List<Double> data, boolean firstEstimated);
+    void labelFileNotSaved(String fileName);
+    void labelFileSaved(String fileName);
+    void showLegend(boolean show);
 }

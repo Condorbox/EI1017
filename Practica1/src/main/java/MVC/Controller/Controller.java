@@ -54,4 +54,14 @@ public class Controller implements IController {
         }
         model.estimateNewPoint(estimateCoordinates);
     }
+
+    @Override
+    public void saveFile() {
+        model.saveFile();
+    }
+
+    @Override
+    public void showLegend(boolean show) {
+        view.showLegend(show);
+    }
 }

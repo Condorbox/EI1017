@@ -14,7 +14,11 @@ public class Model implements IModel {
     private final CSV CSVReader;
 
     private Map<String, List<List<Double>>> points;
+    private Map<List<Double>, String> dataNotSaved;
     private List<String> header;
+
+    private boolean firstEstimated = true;
+    private File file;
 
     public Model(){
         this.knn = new KNN();
@@ -23,6 +27,10 @@ public class Model implements IModel {
 
     @Override
     public void setFile(File file) {
+        dataNotSaved = new HashMap<>();
+        firstEstimated = true;
+        this.file = file;
+
         knn.train(CSVReader.readTableWithLabels(file.getAbsolutePath()));
         header = knn.getHeader().subList(0, knn.getHeader().size() - 1);
         updatePoints();
@@ -37,7 +45,6 @@ public class Model implements IModel {
 
     private void updatePoints(){
         points = new HashMap<>();
-        points.clear();
         for (Map.Entry<List<Double>, String> entry: knn.getDataTable().entrySet()) {
             putPoint(entry.getValue(), entry.getKey());
         }
@@ -71,11 +78,14 @@ public class Model implements IModel {
     @Override
     public void estimateNewPoint(List<Double> newPoint) {
         String label = knn.estimate(newPoint);
-        if (alreadyContainsPoint(label, newPoint)){
+        if (alreadyContainsPoint(label, newPoint) || alreadyContainsPoint("New Point", newPoint)){
             label = "Already contains this point";
         }else{
-            putPoint(label, newPoint);
-            view.chartNewPoint(label, newPoint);
+            putPoint("New Point", newPoint);
+            dataNotSaved.put(newPoint, label);
+            view.chartNewPoint(label, newPoint, firstEstimated);
+            firstEstimated = false;
+            view.labelFileNotSaved(file.getName());
         }
         view.updateEstimateLabel(label);
 
@@ -83,11 +93,19 @@ public class Model implements IModel {
 
     private boolean alreadyContainsPoint(String label, List<Double> newPoint){
         boolean contains = false;
+        if (!points.containsKey(label)) return false;
         for (List<Double> value : points.get(label)) {
             contains = value.equals(newPoint);
             if (contains)
                 break;
         }
         return contains;
+    }
+
+    @Override
+    public void saveFile() {
+        WriteFile.saveFile(file, dataNotSaved);
+        dataNotSaved.clear();
+        view.labelFileSaved(file.getName());
     }
 }

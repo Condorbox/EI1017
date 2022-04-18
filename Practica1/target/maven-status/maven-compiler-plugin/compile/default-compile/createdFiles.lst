@@ -6,6 +6,7 @@ AI\KMeans\KMeans.class
 AI\KMeans\KMeansEstimateType.class
 CSV\RowWithLabel.class
 Utilities\Arithmetic.class
+MVC\Model\WriteFile.class
 CSV\RowInterface.class
 MVC\Model\Model.class
 AI\DistanceClient.class

@@ -24,7 +24,7 @@ public class View implements IView{
     private IModel model;
 
     private final Stage stage;
-    private Label fileName;
+    private Label fileNameLabel;
     private ScatterChart scatterChart;
     private ObservableList comparableList;
     private ComboBox comboX;
@@ -40,11 +40,13 @@ public class View implements IView{
     @Override
     public Tab createGUI() {
         Button openBtn = new Button("Select a file");
-        fileName = new Label("NonSelectedFile");
+        fileNameLabel = new Label("NonSelectedFile");
 
         initializeChart();
         comboX = new ComboBox(comparableList);
         comboY = new ComboBox(comparableList);
+        CheckBox showLegend = new CheckBox("Show Legend");
+        showLegend.setSelected(false);
 
         ObservableList<DistanceType> distanceType = FXCollections.observableArrayList(EnumSet.allOf(DistanceType.class));
         comboDistance = new ComboBox(distanceType);
@@ -54,6 +56,7 @@ public class View implements IView{
         newPointText = new TextField();
         newPointText.setDisable(true);
         Button estimateBtn = new Button("Estimate");
+        Button saveBtn = new Button("Save");
 
         openBtn.setOnAction(actionEvent -> controller.updateFile(stage));
         comboX.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
@@ -61,8 +64,10 @@ public class View implements IView{
 
         comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
         estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
+        saveBtn.setOnAction(actionEvent -> controller.saveFile());
+        showLegend.setOnAction(actionEvent -> controller.showLegend(showLegend.isSelected()));
 
-        BorderPane visualization = createVisualization(openBtn, estimateBtn);
+        BorderPane visualization = createVisualization(openBtn, estimateBtn, saveBtn, showLegend);
 
         Tab tabKnn = new Tab("KNN");
         tabKnn.setClosable(false);
@@ -72,33 +77,35 @@ public class View implements IView{
     }
 
     private FlowPane createFilePane(Button btn){
-        FlowPane filePane = new FlowPane(btn, fileName);
+        FlowPane filePane = new FlowPane(btn, fileNameLabel);
         filePane.setHgap(10);
         filePane.setVgap(10);
         return filePane;
     }
 
-    private BorderPane createChartVisualization(){
+    private BorderPane createChartVisualization(CheckBox showLegend){ //TODO Maybe center better
         BorderPane chartVisualization = new BorderPane();
         chartVisualization.setLeft(comboY);
         chartVisualization.setAlignment(comboY, Pos.CENTER_LEFT);
         chartVisualization.setCenter(scatterChart);
         chartVisualization.setBottom(comboX);
         chartVisualization.setAlignment(comboX, Pos.BOTTOM_CENTER);
+        chartVisualization.setRight(showLegend);
+        chartVisualization.setAlignment(showLegend, Pos.BOTTOM_RIGHT);
         return chartVisualization;
     }
 
-    private VBox createNewPointVBox(Button estimateBtn){
-        VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateBtn);
+    private VBox createNewPointVBox(Button estimateBtn, Button saveBtn){
+        VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateBtn, saveBtn);
         newPointVBox.setAlignment(Pos.CENTER);
         return newPointVBox;
     }
 
-    private BorderPane createVisualization(Button openBtn, Button estimateBtn){
+    private BorderPane createVisualization(Button openBtn, Button estimateBtn, Button saveBtn, CheckBox showLegend){
         BorderPane visualization = new BorderPane();
         visualization.setTop(createFilePane(openBtn));
-        visualization.setCenter(createChartVisualization());
-        visualization.setRight(createNewPointVBox(estimateBtn));
+        visualization.setCenter(createChartVisualization(showLegend));
+        visualization.setRight(createNewPointVBox(estimateBtn, saveBtn));
         visualization.setPadding(new Insets(10., 10., 10., 10.));
 
         return visualization;
@@ -110,13 +117,13 @@ public class View implements IView{
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Y");
         scatterChart = new ScatterChart (xAxis, yAxis);
-        //scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("root.css").toExternalForm()); //TODO arreglar el Stylesheet
+        showLegend(false);
+        scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
     }
 
     @Override
     public void updateFile(String name) {
-        //initializeChart();
-        fileName.setText(name);
+        fileNameLabel.setText(name);
         updateCombo();
     }
 
@@ -165,10 +172,34 @@ public class View implements IView{
     }
 
     @Override
-    public void chartNewPoint(String label, List<Double> data) {
+    public void chartNewPoint(String label, List<Double> data, boolean firstEstimated) {
+        if (firstEstimated){
+            addNewSeriesToChart(data);
+        }else{
+            XYChart.Series series = (XYChart.Series) scatterChart.getData().get(scatterChart.getData().size() - 1);
+            series.getData().add(new XYChart.Data<>(data.get(comboX.getSelectionModel().getSelectedIndex()), data.get(comboY.getSelectionModel().getSelectedIndex())));
+        }
+    }
+
+    private void addNewSeriesToChart(List<Double> data){
         XYChart.Series series = new XYChart.Series();
-        series.getData().add(new XYChart.Data<>(data.get(comboX.getSelectionModel().getSelectedIndex()), data.get(comboY.getSelectionModel().getSelectedIndex())));
         series.setName("new Point");
+        series.getData().add(new XYChart.Data<>(data.get(comboX.getSelectionModel().getSelectedIndex()), data.get(comboY.getSelectionModel().getSelectedIndex())));
         scatterChart.getData().add(series);
+    }
+
+    @Override
+    public void labelFileNotSaved(String fileName) {
+        fileNameLabel.setText(fileName + "*");
+    }
+
+    @Override
+    public void labelFileSaved(String fileName) {
+        fileNameLabel.setText(fileName);
+    }
+
+    @Override
+    public void showLegend(boolean show) {
+        scatterChart.setLegendVisible(show);
     }
 }

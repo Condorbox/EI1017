@@ -13,4 +13,5 @@ public interface IModel {
     Map<String, List<List<Double>>> getPoints();
     void setDistance(int distanceIndex);
     void estimateNewPoint(List<Double> newPoint);
+    void saveFile();
 }

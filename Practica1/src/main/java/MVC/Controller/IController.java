@@ -11,4 +11,6 @@ public interface IController {
     void changeXGraphic(int xIndex, int yIndex);
     void setDistance(int distanceIndex);
     void estimateNewPoint(String newPoint);
+    void saveFile();
+    void showLegend(boolean show);
 }
