@@ -6,15 +6,12 @@ import Patterns.FactoryPattern.DistanceType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.EnumSet;
@@ -26,66 +23,105 @@ public class View implements IView{
     private IController controller;
     private IModel model;
 
-    private Stage stage;
+    private final Stage stage;
     private Label fileName;
     private ScatterChart scatterChart;
-    private ObservableList<String> comparableList;
-    private ObservableList<DistanceType> distanceType;
+    private ObservableList comparableList;
     private ComboBox comboX;
     private ComboBox comboY;
     private ComboBox comboDistance;
     private TextField newPoint;
     private TextField newPointText;
-    private Button estimateButton;
-
 
     public View(Stage stage){
         this.stage = stage;
     }
 
     @Override
-    public FlowPane createGUI() {
-        stage.setTitle("KNN");
-
-        Button btn = new Button("Select a file");
+    public Tab createGUI() {
+        Button openBtn = new Button("Select a file");
         fileName = new Label("NonSelectedFile");
-        scatterChart = initializeChart();
+
+        initializeChart();
         comboX = new ComboBox(comparableList);
         comboY = new ComboBox(comparableList);
 
-        distanceType = FXCollections.observableArrayList(EnumSet.allOf(DistanceType.class));
+        ObservableList<DistanceType> distanceType = FXCollections.observableArrayList(EnumSet.allOf(DistanceType.class));
         comboDistance = new ComboBox(distanceType);
         comboDistance.getSelectionModel().selectFirst();
 
         newPoint = new TextField("New Point");
         newPointText = new TextField();
         newPointText.setDisable(true);
-        estimateButton = new Button("Estimate");
+        Button estimateBtn = new Button("Estimate");
 
-        VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateButton);
-
-        btn.setOnAction(actionEvent -> controller.updateFile(stage));
+        openBtn.setOnAction(actionEvent -> controller.updateFile(stage));
         comboX.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
         comboY.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
 
         comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
-        estimateButton.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
+        estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
 
-        FlowPane flowPane = new FlowPane(btn, fileName, scatterChart, comboX, comboY, newPointVBox);
-        flowPane.setHgap(10);
-        flowPane.setVgap(10);
-        flowPane.setPadding(new Insets(10));
+        BorderPane visualization = createVisualization(openBtn, estimateBtn);
 
-        return flowPane;
+        Tab tabKnn = new Tab("KNN");
+        tabKnn.setClosable(false);
+        tabKnn.setContent(visualization);
+
+        return tabKnn;
+    }
+
+    private FlowPane createFilePane(Button btn){
+        FlowPane filePane = new FlowPane(btn, fileName);
+        filePane.setHgap(10);
+        filePane.setVgap(10);
+        return filePane;
+    }
+
+    private BorderPane createChartVisualization(){
+        BorderPane chartVisualization = new BorderPane();
+        chartVisualization.setLeft(comboY);
+        chartVisualization.setAlignment(comboY, Pos.CENTER_LEFT);
+        chartVisualization.setCenter(scatterChart);
+        chartVisualization.setBottom(comboX);
+        chartVisualization.setAlignment(comboX, Pos.BOTTOM_CENTER);
+        return chartVisualization;
+    }
+
+    private VBox createNewPointVBox(Button estimateBtn){
+        VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateBtn);
+        newPointVBox.setAlignment(Pos.CENTER);
+        return newPointVBox;
+    }
+
+    private BorderPane createVisualization(Button openBtn, Button estimateBtn){
+        BorderPane visualization = new BorderPane();
+        visualization.setTop(createFilePane(openBtn));
+        visualization.setCenter(createChartVisualization());
+        visualization.setRight(createNewPointVBox(estimateBtn));
+        visualization.setPadding(new Insets(10., 10., 10., 10.));
+
+        return visualization;
+    }
+
+    private void initializeChart(){
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setLabel("X");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Y");
+        scatterChart = new ScatterChart (xAxis, yAxis);
+        //scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("root.css").toExternalForm()); //TODO arreglar el Stylesheet
     }
 
     @Override
-    public void updateFile(String name, Map<List<Double>, String> dataTable) {
+    public void updateFile(String name) {
+        //initializeChart();
         fileName.setText(name);
         updateCombo();
     }
 
     private void updateCombo(){
+
         comparableList = FXCollections.observableArrayList(model.getHeader());
         comboX.setItems(comparableList);
         comboY.setItems(comparableList);
@@ -103,16 +139,6 @@ public class View implements IView{
         this.model = model;
     }
 
-    private ScatterChart initializeChart(){
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        ScatterChart scatterChart = new ScatterChart (xAxis, yAxis);
-        //scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("root.css").toExternalForm()); //TODO arreglar el Stylesheet
-
-        return  scatterChart;
-    }
-
-    //TODO Ask if this is correct in the MVC pattern
     @Override
     public void updateChart(int xIndex, int yIndex){
         String xHeader = model.getHeader().get(xIndex);

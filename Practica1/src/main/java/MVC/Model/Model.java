@@ -27,7 +27,7 @@ public class Model implements IModel {
         header = knn.getHeader().subList(0, knn.getHeader().size() - 1);
         updatePoints();
 
-        view.updateFile(file.getName(), knn.getDataTable());
+        view.updateFile(file.getName());
     }
 
     @Override
@@ -37,6 +37,7 @@ public class Model implements IModel {
 
     private void updatePoints(){
         points = new HashMap<>();
+        points.clear();
         for (Map.Entry<List<Double>, String> entry: knn.getDataTable().entrySet()) {
             putPoint(entry.getValue(), entry.getKey());
         }

@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -20,6 +19,8 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setTitle("EI1017");
+
         View viewKnn = new View(primaryStage);
         Controller controller = new Controller();
         Model model = new Model();
@@ -30,24 +31,18 @@ public class MainFX extends Application {
         viewKnn.setController(controller);
         viewKnn.setModel(model);
 
-        FlowPane flowPane = viewKnn.createGUI();
-
-
         StackPane root = new StackPane();
 
-        TabPane tabPane = new TabPane();
-        Tab tabKnn = new Tab("KNN");
-        tabKnn.setClosable(false);
-        tabKnn.setContent(flowPane);
+        Tab tabKnn = viewKnn.createGUI();
 
+        TabPane tabPane = new TabPane();
         tabPane.getTabs().add(tabKnn);
+        tabPane.getSelectionModel().select(0); //Default Selected
+
+        root.getChildren().add(tabPane);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-
-        root.getChildren().add(tabPane);
-        tabPane.getSelectionModel().select(0); //Default Selected
-
         primaryStage.show();
     }
 }

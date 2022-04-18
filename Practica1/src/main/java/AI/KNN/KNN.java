@@ -32,6 +32,7 @@ public class KNN implements KNNInterface, DistanceClient {
 
     @Override
     public void train(TableWithLabel data) {
+        dataTable.clear();
         header = data.getHeaders();
         for (RowWithLabel row: data.getDataTable()) {
             dataTable.put(row.getData(), row.getLabel());
