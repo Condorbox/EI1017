@@ -11,7 +11,9 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.EnumSet;
@@ -201,5 +203,13 @@ public class View implements IView{
     @Override
     public void showLegend(boolean show) {
         scatterChart.setLegendVisible(show);
+    }
+
+    @Override
+    public void errorMessage(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

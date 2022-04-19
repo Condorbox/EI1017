@@ -49,8 +49,12 @@ public class Controller implements IController {
     public void estimateNewPoint(String newPoint) {
         String[] coordinates =  newPoint.split(",");
         List<Double> estimateCoordinates = new LinkedList<>();
-        for (String coordinate: coordinates) {
-            estimateCoordinates.add(Double.parseDouble(coordinate));
+        try {
+            for (String coordinate: coordinates) {
+                estimateCoordinates.add(Double.parseDouble(coordinate));
+            }
+        }catch (Exception exception){
+            exception.fillInStackTrace();
         }
         model.estimateNewPoint(estimateCoordinates);
     }

@@ -19,7 +19,7 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("EI1017");
+        primaryStage.setTitle("Pr 4 EI1017");
 
         View viewKnn = new View(primaryStage);
         Controller controller = new Controller();

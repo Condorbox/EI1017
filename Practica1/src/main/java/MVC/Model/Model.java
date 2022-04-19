@@ -2,6 +2,7 @@ package MVC.Model;
 
 import AI.KNN.KNN;
 import CSV.CSV;
+import CSV.TableWithLabel;
 import MVC.View.IView;
 import Patterns.FactoryPattern.DistanceType;
 
@@ -19,6 +20,7 @@ public class Model implements IModel {
 
     private boolean firstEstimated = true;
     private File file;
+    private int pointSize;
 
     public Model(){
         this.knn = new KNN();
@@ -31,12 +33,22 @@ public class Model implements IModel {
         firstEstimated = true;
         this.file = file;
 
-        knn.train(CSVReader.readTableWithLabels(file.getAbsolutePath()));
+        TableWithLabel knnTable = CSVReader.readTableWithLabels(file.getAbsolutePath());
+        if (knnTable.getDataTable().size() == 0 && knnTable.getHeaders().size() == 0){
+            view.errorMessage("Invalid file", "must select a valid file");
+            throw new IllegalArgumentException("Must select a valid file");
+        }
+        knn.train(knnTable);
         header = knn.getHeader().subList(0, knn.getHeader().size() - 1);
+
+        Optional<Map.Entry<List<Double>, String>> opPointSize = knn.getDataTable().entrySet().stream().findFirst();
+        opPointSize.ifPresent(listStringEntry -> pointSize = listStringEntry.getKey().size());
+
         updatePoints();
 
         view.updateFile(file.getName());
     }
+
 
     @Override
     public void setView(IView view) {
@@ -77,24 +89,40 @@ public class Model implements IModel {
 
     @Override
     public void estimateNewPoint(List<Double> newPoint) {
-        String label = knn.estimate(newPoint);
-        if (alreadyContainsPoint(label, newPoint) || alreadyContainsPoint("New Point", newPoint)){
-            label = "Already contains this point";
-        }else{
-            putPoint("New Point", newPoint);
-            dataNotSaved.put(newPoint, label);
-            view.chartNewPoint(label, newPoint, firstEstimated);
-            firstEstimated = false;
-            view.labelFileNotSaved(file.getName());
-        }
-        view.updateEstimateLabel(label);
+        fileNotSelectedError();
 
+        if(newPoint.size() != pointSize){
+            view.errorMessage("Incorrect Point","Example Point: " + examplePoint());
+            throw new IllegalArgumentException("New Point size must be " + pointSize);
+        }
+
+        String label = knn.estimate(newPoint);
+        if (!alreadyContainsPoint(newPoint)){
+            putPoint("New Point", newPoint);
+            view.chartNewPoint(label, newPoint, firstEstimated);
+        }
+
+        dataNotSaved.put(newPoint, label);
+        firstEstimated = false;
+        view.labelFileNotSaved(file.getName());
+        view.updateEstimateLabel(label);
     }
 
-    private boolean alreadyContainsPoint(String label, List<Double> newPoint){
+    private String examplePoint(){
+        StringBuilder examplePoint = new StringBuilder();
+        for (int i = 0; i < pointSize; i++){
+            examplePoint.append(i);
+            if(i != pointSize - 1 )
+                examplePoint.append(",");
+        }
+
+        return examplePoint.toString();
+    }
+
+    private boolean alreadyContainsPoint(List<Double> newPoint){
         boolean contains = false;
-        if (!points.containsKey(label)) return false;
-        for (List<Double> value : points.get(label)) {
+        if (!points.containsKey("New Point")) return false;
+        for (List<Double> value : points.get("New Point")) {
             contains = value.equals(newPoint);
             if (contains)
                 break;
@@ -104,8 +132,16 @@ public class Model implements IModel {
 
     @Override
     public void saveFile() {
+        fileNotSelectedError();
         WriteFile.saveFile(file, dataNotSaved);
         dataNotSaved.clear();
         view.labelFileSaved(file.getName());
+    }
+
+    private void fileNotSelectedError(){
+        if (file == null){
+            view.errorMessage("File Not Selected", "You must select a correct file");
+            throw new UnsupportedOperationException("Must be a correct selected file");
+        }
     }
 }

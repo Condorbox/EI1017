@@ -17,4 +17,5 @@ public interface IView {
     void labelFileNotSaved(String fileName);
     void labelFileSaved(String fileName);
     void showLegend(boolean show);
+    void errorMessage(String title, String content);
 }
