@@ -3,14 +3,14 @@ package MVC.Model;
 import AI.KNN.KNN;
 import CSV.CSV;
 import CSV.TableWithLabel;
-import MVC.View.IView;
+import MVC.View.IViewModel;
 import Patterns.FactoryPattern.DistanceType;
 
 import java.io.File;
 import java.util.*;
 
-public class Model implements IModel {
-    private IView view;
+public class Model implements IModelController, IModelView {
+    private IViewModel view;
     private final KNN knn;
     private final CSV CSVReader;
 
@@ -29,16 +29,15 @@ public class Model implements IModel {
 
     @Override
     public void setFile(File file) {
-        dataNotSaved = new HashMap<>();
-        firstEstimated = true;
-        this.file = file;
-
         TableWithLabel knnTable = CSVReader.readTableWithLabels(file.getAbsolutePath());
         if (knnTable.getDataTable().size() == 0 && knnTable.getHeaders().size() == 0){
             view.errorMessage("Invalid file", "must select a valid file");
             throw new IllegalArgumentException("Must select a valid file");
         }
         knn.train(knnTable);
+        dataNotSaved = new HashMap<>();
+        firstEstimated = true;
+        this.file = file;
         header = knn.getHeader().subList(0, knn.getHeader().size() - 1);
 
         Optional<Map.Entry<List<Double>, String>> opPointSize = knn.getDataTable().entrySet().stream().findFirst();
@@ -51,7 +50,7 @@ public class Model implements IModel {
 
 
     @Override
-    public void setView(IView view) {
+    public void setView(IViewModel view) {
         this.view = view;
     }
 
@@ -144,4 +143,6 @@ public class Model implements IModel {
             throw new UnsupportedOperationException("Must be a correct selected file");
         }
     }
+
+
 }

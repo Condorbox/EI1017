@@ -1,7 +1,7 @@
 package MVC.Controller;
 
-import MVC.Model.IModel;
-import MVC.View.IView;
+import MVC.Model.IModelController;
+import MVC.View.IViewController;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Controller implements IController {
-    private IModel model;
-    private IView view;
+    private IModelController model;
+    private IViewController view;
 
     private final FileChooser fileChooser;
 
@@ -24,17 +24,17 @@ public class Controller implements IController {
     }
 
     @Override
-    public void setModel(IModel model) {
+    public void setModel(IModelController model) {
         this.model = model;
     }
 
     @Override
-    public void setView(IView view) {
+    public void setView(IViewController view) {
         this.view = view;
     }
 
     @Override
-    public void changeXGraphic(int xIndex, int yIndex) {
+    public void changeGraphic(int xIndex, int yIndex) {
         if(xIndex >= 0 && yIndex >= 0){
             view.updateChart(xIndex, yIndex);
         }

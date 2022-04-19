@@ -1,21 +1,19 @@
 package MVC.View;
 
 import MVC.Controller.IController;
-import MVC.Model.IModel;
+import MVC.Model.IModelView;
 import javafx.scene.control.Tab;
 
 import java.util.List;
 
-public interface IView {
+public interface IViewModel {
     void updateFile(String name);
     Tab createGUI();
     void setController(IController controller);
-    void setModel(IModel model);
-    void updateChart(int xIndex, int yIndex);
+    void setModel(IModelView model);
     void updateEstimateLabel(String label);
     void chartNewPoint(String label, List<Double> data, boolean firstEstimated);
     void labelFileNotSaved(String fileName);
     void labelFileSaved(String fileName);
-    void showLegend(boolean show);
     void errorMessage(String title, String content);
 }

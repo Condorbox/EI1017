@@ -1,7 +1,7 @@
 package MVC.View;
 
 import MVC.Controller.IController;
-import MVC.Model.IModel;
+import MVC.Model.IModelView;
 import Patterns.FactoryPattern.DistanceType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,10 +20,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-public class View implements IView{
+public class View implements IViewModel, IViewController {
 
     private IController controller;
-    private IModel model;
+    private IModelView model;
 
     private final Stage stage;
     private Label fileNameLabel;
@@ -61,8 +61,8 @@ public class View implements IView{
         Button saveBtn = new Button("Save");
 
         openBtn.setOnAction(actionEvent -> controller.updateFile(stage));
-        comboX.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboY.setOnAction(actionEvent -> controller.changeXGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
+        comboX.setOnAction(actionEvent -> controller.changeGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
+        comboY.setOnAction(actionEvent -> controller.changeGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
 
         comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
         estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
@@ -130,7 +130,6 @@ public class View implements IView{
     }
 
     private void updateCombo(){
-
         comparableList = FXCollections.observableArrayList(model.getHeader());
         comboX.setItems(comparableList);
         comboY.setItems(comparableList);
@@ -144,7 +143,7 @@ public class View implements IView{
     }
 
     @Override
-    public void setModel(IModel model) {
+    public void setModel(IModelView model) {
         this.model = model;
     }
 
