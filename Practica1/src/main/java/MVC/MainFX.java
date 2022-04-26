@@ -27,7 +27,6 @@ public class MainFX extends Application {
 
         model.setView(viewKnn);
         controller.setModel(model);
-        controller.setView(viewKnn);
         viewKnn.setController(controller);
         viewKnn.setModel(model);
 

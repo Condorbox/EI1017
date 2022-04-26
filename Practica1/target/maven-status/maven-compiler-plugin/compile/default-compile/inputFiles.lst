@@ -4,6 +4,7 @@ E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KNN\KNNInt
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KNN\DistanceData.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\TableInterface.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\RowWithLabel.java
+E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Model\IModelController.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Model\WriteFile.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KMeans\DurstenfeldAlgorithm.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\LinearRegresion\LinearRegression.java
@@ -13,9 +14,9 @@ E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Model\Mod
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KNN\KNN.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KMeans\KMeansEstimateType.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\RowWithLabelInterface.java
-E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Model\IModel.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\Patterns\FactoryPattern\DistanceType.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\RowInterface.java
+E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\View\IViewModel.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\MainFX.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\KMeans\KMeans.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\TableWithLabel.java
@@ -26,9 +27,10 @@ E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\Patterns\Stra
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\Patterns\StrategyPattern\IDistance.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Controller\IController.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\Table.java
-E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\View\IView.java
+E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Model\IModelView.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\CSV\Row.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\Utilities\GetAbsolutePath.java
+E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\View\IViewController.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\LinearRegresion\LinearRegressionInterface.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\MVC\Controller\Controller.java
 E:\Cosas\Universidad\Programacion avanzada\Practica1\src\main\java\AI\DistanceClient.java

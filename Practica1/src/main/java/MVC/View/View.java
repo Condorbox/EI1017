@@ -13,25 +13,27 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class View implements IViewModel, IViewController {
+public class View implements IViewModel {
 
     private IController controller;
     private IModelView model;
 
     private final Stage stage;
     private Label fileNameLabel;
-    private ScatterChart scatterChart;
-    private ObservableList comparableList;
-    private ComboBox comboX;
-    private ComboBox comboY;
-    private ComboBox comboDistance;
+    private ScatterChart<XYChart<Double,Double>,XYChart<Double,Double>> scatterChart;
+    private ObservableList<String> comparableList;
+    private ComboBox<String> comboX;
+    private ComboBox<String> comboY;
+    private ComboBox<DistanceType> comboDistance;
     private TextField newPoint;
     private TextField newPointText;
 
@@ -45,13 +47,13 @@ public class View implements IViewModel, IViewController {
         fileNameLabel = new Label("NonSelectedFile");
 
         initializeChart();
-        comboX = new ComboBox(comparableList);
-        comboY = new ComboBox(comparableList);
+        comboX = new ComboBox<>(comparableList);
+        comboY = new ComboBox<>(comparableList);
         CheckBox showLegend = new CheckBox("Show Legend");
         showLegend.setSelected(false);
 
         ObservableList<DistanceType> distanceType = FXCollections.observableArrayList(EnumSet.allOf(DistanceType.class));
-        comboDistance = new ComboBox(distanceType);
+        comboDistance = new ComboBox<>(distanceType);
         comboDistance.getSelectionModel().selectFirst();
 
         newPoint = new TextField("New Point");
@@ -61,13 +63,12 @@ public class View implements IViewModel, IViewController {
         Button saveBtn = new Button("Save");
 
         openBtn.setOnAction(actionEvent -> controller.updateFile(stage));
-        comboX.setOnAction(actionEvent -> controller.changeGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboY.setOnAction(actionEvent -> controller.changeGraphic(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-
+        comboX.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
+        comboY.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
         comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
         estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
         saveBtn.setOnAction(actionEvent -> controller.saveFile());
-        showLegend.setOnAction(actionEvent -> controller.showLegend(showLegend.isSelected()));
+        showLegend.setOnAction(actionEvent -> showLegend(showLegend.isSelected()));
 
         BorderPane visualization = createVisualization(openBtn, estimateBtn, saveBtn, showLegend);
 
@@ -85,15 +86,22 @@ public class View implements IViewModel, IViewController {
         return filePane;
     }
 
-    private BorderPane createChartVisualization(CheckBox showLegend){ //TODO Maybe center better
+    private BorderPane createChartVisualization(CheckBox showLegend){
         BorderPane chartVisualization = new BorderPane();
-        chartVisualization.setLeft(comboY);
-        chartVisualization.setAlignment(comboY, Pos.CENTER_LEFT);
+
+        VBox comboYVBox = new VBox(comboY);
+        comboYVBox.setAlignment(Pos.CENTER);
+        chartVisualization.setLeft(comboYVBox);
+
         chartVisualization.setCenter(scatterChart);
-        chartVisualization.setBottom(comboX);
-        chartVisualization.setAlignment(comboX, Pos.BOTTOM_CENTER);
-        chartVisualization.setRight(showLegend);
-        chartVisualization.setAlignment(showLegend, Pos.BOTTOM_RIGHT);
+        HBox comboXHBox = new HBox(comboX);
+        comboXHBox.setAlignment(Pos.CENTER);
+        chartVisualization.setBottom(comboXHBox);
+
+        VBox legendVBox = new VBox(showLegend);
+        legendVBox.setAlignment(Pos.BOTTOM_LEFT);
+        chartVisualization.setRight(legendVBox);
+
         return chartVisualization;
     }
 
@@ -118,9 +126,9 @@ public class View implements IViewModel, IViewController {
         xAxis.setLabel("X");
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Y");
-        scatterChart = new ScatterChart (xAxis, yAxis);
+        scatterChart = new ScatterChart(xAxis, yAxis);
         showLegend(false);
-        scatterChart.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
+        scatterChart.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style.css")).toExternalForm());
     }
 
     @Override
@@ -147,14 +155,18 @@ public class View implements IViewModel, IViewController {
         this.model = model;
     }
 
-    @Override
     public void updateChart(int xIndex, int yIndex){
-        String xHeader = model.getHeader().get(xIndex);
-        String yHeader = model.getHeader().get(yIndex);
-        scatterChart.setTitle(xHeader + " vs " + yHeader);
-        scatterChart.getXAxis().setLabel(xHeader);
-        scatterChart.getYAxis().setLabel(yHeader);
+        if(xIndex >= 0 && yIndex >= 0){
+            String xHeader = model.getHeader().get(xIndex);
+            String yHeader = model.getHeader().get(yIndex);
+            scatterChart.setTitle(xHeader + " vs " + yHeader);
+            scatterChart.getXAxis().setLabel(xHeader);
+            scatterChart.getYAxis().setLabel(yHeader);
+            putPointsOnChart(xIndex, yIndex);
+        }
+    }
 
+    private void putPointsOnChart(int xIndex, int yIndex){
         scatterChart.setData(FXCollections.observableArrayList());
 
         for (Map.Entry<String, List<List<Double>>> entry: model.getPoints().entrySet()) {
@@ -177,7 +189,7 @@ public class View implements IViewModel, IViewController {
         if (firstEstimated){
             addNewSeriesToChart(data);
         }else{
-            XYChart.Series series = (XYChart.Series) scatterChart.getData().get(scatterChart.getData().size() - 1);
+            XYChart.Series series = scatterChart.getData().get(scatterChart.getData().size() - 1);
             series.getData().add(new XYChart.Data<>(data.get(comboX.getSelectionModel().getSelectedIndex()), data.get(comboY.getSelectionModel().getSelectedIndex())));
         }
     }
@@ -199,7 +211,6 @@ public class View implements IViewModel, IViewController {
         fileNameLabel.setText(fileName);
     }
 
-    @Override
     public void showLegend(boolean show) {
         scatterChart.setLegendVisible(show);
     }
