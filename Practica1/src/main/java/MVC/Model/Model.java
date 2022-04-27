@@ -29,6 +29,8 @@ public class Model implements IModelController, IModelView {
 
     @Override
     public void setFile(File file) {
+        if(file == null) {throw new NullPointerException("File not selected");}
+
         TableWithLabel knnTable = CSVReader.readTableWithLabels(file.getAbsolutePath());
         if (knnTable.getDataTable().size() == 0 && knnTable.getHeaders().size() == 0){
             view.errorMessage("Invalid file", "must select a valid file");

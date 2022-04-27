@@ -1,24 +1,19 @@
 package MVC.Controller;
 
 import MVC.Model.IModelController;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Controller implements IController {
     private IModelController model;
 
-    private final FileChooser fileChooser;
-
-    public Controller(){
-        fileChooser = new FileChooser();
-    }
+    public Controller(){}
 
     @Override
-    public void updateFile(Stage stage) {
-        model.setFile(fileChooser.showOpenDialog(stage));
+    public void updateFile(File file) {
+        model.setFile(file);
     }
 
     @Override

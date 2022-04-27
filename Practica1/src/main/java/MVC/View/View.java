@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.util.EnumSet;
@@ -28,6 +29,7 @@ public class View implements IViewModel {
     private IModelView model;
 
     private final Stage stage;
+    private FileChooser fileChooser;
     private Label fileNameLabel;
     private ScatterChart<XYChart<Double,Double>,XYChart<Double,Double>> scatterChart;
     private ObservableList<String> comparableList;
@@ -43,6 +45,8 @@ public class View implements IViewModel {
 
     @Override
     public Tab createGUI() {
+        fileChooser = new  FileChooser();
+
         Button openBtn = new Button("Select a file");
         fileNameLabel = new Label("NonSelectedFile");
 
@@ -62,7 +66,7 @@ public class View implements IViewModel {
         Button estimateBtn = new Button("Estimate");
         Button saveBtn = new Button("Save");
 
-        openBtn.setOnAction(actionEvent -> controller.updateFile(stage));
+        openBtn.setOnAction(actionEvent -> controller.updateFile(fileChooser.showOpenDialog(stage)));
         comboX.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
         comboY.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
         comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
