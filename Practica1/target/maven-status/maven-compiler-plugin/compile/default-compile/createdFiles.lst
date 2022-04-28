@@ -27,7 +27,6 @@ CSV\CSVInterface.class
 CSV\TableInterface.class
 CSV\RowWithLabelInterface.class
 CSV\TableWithLabel.class
-MVC\View\IViewController.class
 CSV\Table.class
 CSV\CSV.class
 AI\LinearRegresion\LinearRegression.class

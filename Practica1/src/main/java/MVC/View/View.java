@@ -13,7 +13,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -90,25 +89,6 @@ public class View implements IViewModel {
         return filePane;
     }
 
-    private BorderPane createChartVisualization(CheckBox showLegend){
-        BorderPane chartVisualization = new BorderPane();
-
-        VBox comboYVBox = new VBox(comboY);
-        comboYVBox.setAlignment(Pos.CENTER);
-        chartVisualization.setLeft(comboYVBox);
-
-        chartVisualization.setCenter(scatterChart);
-        HBox comboXHBox = new HBox(comboX);
-        comboXHBox.setAlignment(Pos.CENTER);
-        chartVisualization.setBottom(comboXHBox);
-
-        VBox legendVBox = new VBox(showLegend);
-        legendVBox.setAlignment(Pos.BOTTOM_LEFT);
-        chartVisualization.setRight(legendVBox);
-
-        return chartVisualization;
-    }
-
     private VBox createNewPointVBox(Button estimateBtn, Button saveBtn){
         VBox newPointVBox = new VBox(comboDistance, newPoint, newPointText, estimateBtn, saveBtn);
         newPointVBox.setAlignment(Pos.CENTER);
@@ -117,9 +97,22 @@ public class View implements IViewModel {
 
     private BorderPane createVisualization(Button openBtn, Button estimateBtn, Button saveBtn, CheckBox showLegend){
         BorderPane visualization = new BorderPane();
+
         visualization.setTop(createFilePane(openBtn));
-        visualization.setCenter(createChartVisualization(showLegend));
+
+        VBox comboYVBox = new VBox(comboY);
+        comboYVBox.setAlignment(Pos.CENTER);
+        visualization.setLeft(comboYVBox);
+
         visualization.setRight(createNewPointVBox(estimateBtn, saveBtn));
+
+        visualization.setCenter(scatterChart);
+
+        BorderPane otpPane = new BorderPane();
+        otpPane.setCenter(comboX);
+        otpPane.setRight(showLegend);
+        visualization.setBottom(otpPane);
+
         visualization.setPadding(new Insets(10., 10., 10., 10.));
 
         return visualization;
