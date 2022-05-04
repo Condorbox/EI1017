@@ -2,7 +2,9 @@ package MVC.View;
 
 import MVC.Controller.IController;
 import MVC.Model.IModelView;
+
 import Patterns.FactoryPattern.DistanceType;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -65,13 +67,7 @@ public class View implements IViewModel {
         Button estimateBtn = new Button("Estimate");
         Button saveBtn = new Button("Save");
 
-        openBtn.setOnAction(actionEvent -> controller.updateFile(fileChooser.showOpenDialog(stage)));
-        comboX.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboY.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
-        estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
-        saveBtn.setOnAction(actionEvent -> controller.saveFile());
-        showLegend.setOnAction(actionEvent -> showLegend(showLegend.isSelected()));
+        SetActions(openBtn, estimateBtn, saveBtn, showLegend);
 
         BorderPane visualization = createVisualization(openBtn, estimateBtn, saveBtn, showLegend);
 
@@ -80,6 +76,16 @@ public class View implements IViewModel {
         tabKnn.setContent(visualization);
 
         return tabKnn;
+    }
+
+    private void SetActions(Button openBtn, Button estimateBtn, Button saveBtn, CheckBox showLegend){
+        openBtn.setOnAction(actionEvent -> controller.updateFile(fileChooser.showOpenDialog(stage)));
+        comboX.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
+        comboY.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
+        comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
+        estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
+        saveBtn.setOnAction(actionEvent -> controller.saveFile());
+        showLegend.setOnAction(actionEvent -> showLegend(showLegend.isSelected()));
     }
 
     private FlowPane createFilePane(Button btn){

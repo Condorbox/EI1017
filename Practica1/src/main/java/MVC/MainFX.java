@@ -32,16 +32,18 @@ public class MainFX extends Application {
 
         StackPane root = new StackPane();
 
-        Tab tabKnn = viewKnn.createGUI();
-
-        TabPane tabPane = new TabPane();
-        tabPane.getTabs().add(tabKnn);
-        tabPane.getSelectionModel().select(0); //Default Selected
-
-        root.getChildren().add(tabPane);
+        root.getChildren().add(createTabPane(viewKnn.createGUI()));
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private TabPane createTabPane(Tab tabKnn){
+        TabPane tabPane = new TabPane();
+        tabPane.getTabs().add(tabKnn);
+        tabPane.getSelectionModel().select(0); //Default Selected
+
+        return tabPane;
     }
 }
