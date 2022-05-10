@@ -2,7 +2,7 @@ package CSV;
 
 import java.util.List;
 
-public class RowWithLabel extends Row implements RowWithLabelInterface{
+public class RowWithLabel extends Row {
     private String label;
 
     public RowWithLabel(){
@@ -14,13 +14,11 @@ public class RowWithLabel extends Row implements RowWithLabelInterface{
         super(data);
         this.label = label;
     }
-    
-    @Override
+
     public String getLabel() {
         return label;
     }
 
-    @Override
     public void setLabel(String label) {
         this.label = label;
     }

@@ -1,4 +1,4 @@
-package AI.KNN;
+package CSV.AI.KNN;
 
 public class DistanceData implements Comparable<DistanceData> { //Middle-man data container
     double distance;

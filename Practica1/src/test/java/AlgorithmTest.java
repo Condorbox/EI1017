@@ -1,12 +1,12 @@
 import CSV.CSV;
 import CSV.Row;
 
-import AI.KMeans.KMeans;
-import AI.KMeans.KMeansEstimateType;
+import CSV.AI.KMeans.KMeans;
+import CSV.AI.KMeans.KMeansEstimateType;
 
-import AI.KNN.KNN;
+import CSV.AI.KNN.KNN;
 
-import AI.LinearRegresion.LinearRegression;
+import CSV.AI.LinearRegresion.LinearRegression;
 
 import Patterns.FactoryPattern.DistanceType;
 

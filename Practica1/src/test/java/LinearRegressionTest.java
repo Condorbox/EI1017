@@ -1,5 +1,5 @@
 import CSV.CSV;
-import AI.LinearRegresion.LinearRegression;
+import CSV.AI.LinearRegresion.LinearRegression;
 import Utilities.GetAbsolutePath;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

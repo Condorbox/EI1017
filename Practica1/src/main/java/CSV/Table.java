@@ -3,7 +3,7 @@ package CSV;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table<T extends Row> implements TableInterface<T>{
+public class Table<T extends Row> {
     protected List<String> headers;
     protected List<T> dataTable;
 
@@ -17,14 +17,12 @@ public class Table<T extends Row> implements TableInterface<T>{
         this.dataTable = dataTable;
     }
 
-    @Override
     public T getRowAt(int index) {
         if(index >= dataTable.size() || index < 0)
             throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (dataTable.size()-1) + "]");
         return dataTable.get(index);
     }
 
-    @Override
     public List<Double> getColumnAt(int index) {
         if (index >= headers.size() || index < 0)
             throw new ArrayIndexOutOfBoundsException("index too big or too small, must be between [0," + (headers.size()-1) + "]");
@@ -35,12 +33,10 @@ public class Table<T extends Row> implements TableInterface<T>{
         return column;
     }
 
-    @Override
     public void addHeader(String header){
         this.headers.add(header);
     }
 
-    @Override
     public void addRow(T row){
         dataTable.add(row);
     }
@@ -49,7 +45,6 @@ public class Table<T extends Row> implements TableInterface<T>{
         return headers;
     }
 
-    @Override
     public List<T> getDataTable(){
         return dataTable;
     }

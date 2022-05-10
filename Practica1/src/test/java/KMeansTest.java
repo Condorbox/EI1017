@@ -1,8 +1,8 @@
 import CSV.CSV;
 import CSV.Row;
 
-import AI.KMeans.KMeans;
-import AI.KMeans.KMeansEstimateType;
+import CSV.AI.KMeans.KMeans;
+import CSV.AI.KMeans.KMeansEstimateType;
 
 import Patterns.FactoryPattern.DistanceType;
 
@@ -41,12 +41,6 @@ class KMeansTest {
     @DisplayName("test train empty table")
     void testTrainEmptyTable(){
         assertThrows(IllegalArgumentException.class, () -> kMeans.train(csvReader.readTable(emptyFile)));
-    }
-
-    @Test
-    @DisplayName("test train different number of cluster")
-    void testTrainDifferentNumberOfCluster(){
-        assertThrows(UnsupportedOperationException.class, () -> kMeans.train(csvReader.readTable(numbers)));
     }
 
     @Test

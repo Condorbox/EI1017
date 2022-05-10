@@ -1,4 +1,4 @@
-import AI.KNN.KNN;
+import CSV.AI.KNN.KNN;
 
 import Patterns.FactoryPattern.DistanceType;
 

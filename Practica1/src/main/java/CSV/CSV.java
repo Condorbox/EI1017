@@ -1,10 +1,10 @@
 package CSV;
 
-import java.io.File;  // Import the File class
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.util.Scanner;
 
-public class CSV implements CSVInterface{
+public class CSV{
     private static final Table<Row> TABLE_ERROR = new Table<Row>();
     private static final TableWithLabel TABLE_WITH_LABEL_ERROR = new TableWithLabel();
 
@@ -18,7 +18,6 @@ public class CSV implements CSVInterface{
         this.delimiter = delimiter;
     }
 
-    @Override
     public Table<Row> readTable(String csvFile) {
         System.out.println("Reading....");
         try {
@@ -55,7 +54,6 @@ public class CSV implements CSVInterface{
         }
     }
 
-    @Override
     public TableWithLabel readTableWithLabels(String csvFileWithLabels) {
         System.out.println("Reading....");
         try{

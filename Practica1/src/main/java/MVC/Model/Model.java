@@ -1,6 +1,6 @@
 package MVC.Model;
 
-import AI.KNN.KNN;
+import CSV.AI.KNN.KNN;
 import CSV.CSV;
 import CSV.TableWithLabel;
 import MVC.View.IViewModel;

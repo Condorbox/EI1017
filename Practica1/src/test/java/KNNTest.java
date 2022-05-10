@@ -1,5 +1,5 @@
 import CSV.CSV;
-import AI.KNN.KNN;
+import CSV.AI.KNN.KNN;
 
 import Utilities.GetAbsolutePath;
 import org.junit.jupiter.api.BeforeAll;

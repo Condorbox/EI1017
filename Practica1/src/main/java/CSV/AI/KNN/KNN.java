@@ -1,9 +1,9 @@
-package AI.KNN;
+package CSV.AI.KNN;
 
 import CSV.TableWithLabel;
 import CSV.RowWithLabel;
 
-import AI.DistanceClient;
+import CSV.AI.DistanceClient;
 
 import Patterns.FactoryPattern.DistanceType;
 import Patterns.StrategyPattern.IDistance;

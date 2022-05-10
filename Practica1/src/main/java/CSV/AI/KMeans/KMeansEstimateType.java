@@ -1,4 +1,4 @@
-package AI.KMeans;
+package CSV.AI.KMeans;
 
 public enum KMeansEstimateType {
     meanType,

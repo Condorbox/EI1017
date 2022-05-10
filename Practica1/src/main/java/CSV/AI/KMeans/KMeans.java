@@ -1,13 +1,13 @@
-package AI.KMeans;
+package CSV.AI.KMeans;
 
+import CSV.AI.KNN.KNN;
 import CSV.Row;
 import CSV.RowWithLabel;
 import CSV.Table;
 import CSV.TableWithLabel;
 
-import AI.DistanceClient;
-import AI.KNN.DistanceData;
-import AI.KNN.KNN;
+import CSV.AI.DistanceClient;
+import CSV.AI.KNN.DistanceData;
 
 import Patterns.FactoryPattern.DistanceType;
 import Patterns.StrategyPattern.IDistance;
@@ -46,7 +46,6 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
     @Override
     public void train(Table<Row> data) {
         if (data == null || data.getDataTable().size() <= 0) throw new IllegalArgumentException("Data must have some elements");
-        if (data.getDataTable().get(0).getData().size() != numberClusters) throw new UnsupportedOperationException("number of cluster and the size of data of each row must be equals");
         Random random = new Random(seed);
         centroid = DurstenfeldAlgorithm.pickNRandomElements(data.getDataTable(), numberClusters, random); //Step 1
 
@@ -116,6 +115,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
         };
     }
 
+    //Use knn algorithm to calculate new label
     private String estimateKnn(Row sample){
         List<RowWithLabel> dataTable = new ArrayList<>();
         for (List<RowWithLabel> group: dataGroup) {
@@ -127,6 +127,7 @@ public class KMeans implements AlgorithmInterface<Table<Row>, Row, String>, Dist
         return knn.estimate(sample.getData());
     }
 
+    //Use mean to calculate new label
     private String estimateMean(Row sample){
          DistanceData distanceData = new DistanceData();
         for (int i = 0; i<numberClusters; i++){

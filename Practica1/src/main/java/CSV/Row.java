@@ -3,7 +3,7 @@ package CSV;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row implements RowInterface{
+public class Row {
     protected List<Double> data;
 
     public Row(){
@@ -14,12 +14,10 @@ public class Row implements RowInterface{
         this.data = data;
     }
 
-    @Override
     public List<Double> getData() {
         return data;
     }
 
-    @Override
     public void addData(Double data){
         this.data.add(data);
     }

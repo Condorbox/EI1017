@@ -1,4 +1,4 @@
-package AI;
+package CSV.AI;
 
 import Patterns.StrategyPattern.IDistance;
 
