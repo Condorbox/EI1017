@@ -19,12 +19,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class View implements IViewModel {
+public class View implements IViewModel, IViewController {
 
     private IController controller;
     private IModelView model;
@@ -67,7 +68,7 @@ public class View implements IViewModel {
         Button estimateBtn = new Button("Estimate");
         Button saveBtn = new Button("Save");
 
-        SetActions(openBtn, estimateBtn, saveBtn, showLegend);
+        setActions(openBtn, estimateBtn, saveBtn, showLegend);
 
         BorderPane visualization = createVisualization(openBtn, estimateBtn, saveBtn, showLegend);
 
@@ -78,12 +79,12 @@ public class View implements IViewModel {
         return tabKnn;
     }
 
-    private void SetActions(Button openBtn, Button estimateBtn, Button saveBtn, CheckBox showLegend){
-        openBtn.setOnAction(actionEvent -> controller.updateFile(fileChooser.showOpenDialog(stage)));
-        comboX.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboY.setOnAction(actionEvent -> updateChart(comboX.getSelectionModel().getSelectedIndex(), comboY.getSelectionModel().getSelectedIndex()));
-        comboDistance.setOnAction(actionEvent -> controller.setDistance(comboDistance.getSelectionModel().getSelectedIndex()));
-        estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint(newPoint.getText()));
+    private void setActions(Button openBtn, Button estimateBtn, Button saveBtn, CheckBox showLegend){
+        openBtn.setOnAction(actionEvent -> controller.updateFile());
+        comboX.setOnAction(actionEvent -> updateChart());
+        comboY.setOnAction(actionEvent -> updateChart());
+        comboDistance.setOnAction(actionEvent -> controller.setDistance());
+        estimateBtn.setOnAction(actionEvent -> controller.estimateNewPoint());
         saveBtn.setOnAction(actionEvent -> controller.saveFile());
         showLegend.setOnAction(actionEvent -> showLegend(showLegend.isSelected()));
     }
@@ -158,7 +159,10 @@ public class View implements IViewModel {
         this.model = model;
     }
 
-    public void updateChart(int xIndex, int yIndex){
+    public void updateChart(){
+        int xIndex = comboX.getSelectionModel().getSelectedIndex();
+        int yIndex = comboY.getSelectionModel().getSelectedIndex();
+
         if(xIndex >= 0 && yIndex >= 0){
             String xHeader = model.getHeader().get(xIndex);
             String yHeader = model.getHeader().get(yIndex);
@@ -224,5 +228,20 @@ public class View implements IViewModel {
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @Override
+    public File getFile() {
+        return fileChooser.showOpenDialog(stage);
+    }
+
+    @Override
+    public int getDistance() {
+        return comboDistance.getSelectionModel().getSelectedIndex();
+    }
+
+    @Override
+    public String getNewPoint() {
+        return newPoint.getText();
     }
 }

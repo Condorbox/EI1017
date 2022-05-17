@@ -19,7 +19,6 @@ public class CSV{
     }
 
     public Table<Row> readTable(String csvFile) {
-        System.out.println("Reading....");
         try {
             Scanner myReader = new Scanner(new File(csvFile));
             Table<Row> table = new Table<Row>();
@@ -55,7 +54,6 @@ public class CSV{
     }
 
     public TableWithLabel readTableWithLabels(String csvFileWithLabels) {
-        System.out.println("Reading....");
         try{
             Scanner myReader = new Scanner(new File(csvFileWithLabels));
             TableWithLabel table = new TableWithLabel();

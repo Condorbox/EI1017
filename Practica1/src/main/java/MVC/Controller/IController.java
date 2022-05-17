@@ -1,13 +1,13 @@
 package MVC.Controller;
 
 import MVC.Model.IModelController;
-
-import java.io.File;
+import MVC.View.IViewController;
 
 public interface IController {
-    void updateFile(File file);
     void setModel(IModelController model);
-    void setDistance(int distanceIndex);
-    void estimateNewPoint(String newPoint);
+    void setView(IViewController view);
+    void updateFile();
+    void setDistance();
+    void estimateNewPoint();
     void saveFile();
 }
